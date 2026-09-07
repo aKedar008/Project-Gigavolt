@@ -1,0 +1,377 @@
+#!/bin/bash
+LOGFILE="/var/log/user-data.log"
+exec > >(tee -a "${LOGFILE}") 2>&1
+echo "================================================================="
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Starting User Data initialization..."
+echo "================================================================="
+export DEBIAN_FRONTEND=noninteractive
+export NEEDRESTART_MODE=a
+
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] [Step 1/3] Updating package lists..."
+apt-get update -y
+
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] [Step 2/3] Installing prerequisites..."
+apt-get install -y apt-transport-https curl unzip
+
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] [Step 3/3] Adding MariaDB repository..."
+mkdir -p /etc/apt/keyrings
+curl -o /etc/apt/keyrings/mariadb-keyring.asc 'https://mariadb.org/mariadb_release_signing_key.pgp'
+
+cat << EOL > /etc/apt/sources.list.d/mariadb.sources
+X-Repolib-Name: MariaDB
+Types: deb
+URIs: https://mirrors.accretive-networks.net/mariadb/repo/12.3/ubuntu
+Suites: resolute
+Components: main main/debug
+Signed-By: /etc/apt/keyrings/mariadb-keyring.asc
+EOL
+
+apt-get update -y
+
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Installing MariaDB server..."
+apt-get install -y mariadb-server || apt-get install -y --fix-missing mariadb-server
+
+if ! command -v mariadb &> /dev/null; then
+echo "ERROR: MariaDB installation failed. Exiting."
+exit 1
+fi
+
+sleep 5
+echo "================================================================="
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] MariaDB installation complete!"
+echo "================================================================="
+
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Downloading data files..."
+mkdir -p /opt/data && cd /opt/data
+wget -q "https://622.gomillion.org/data/fall2026.zip" -O data.zip
+unzip -o data.zip
+
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Creating stg layer schema..."
+
+cat << 'EOF' > /tmp/stg_layer.sql
+CREATE DATABASE IF NOT EXISTS app_db;
+CREATE USER IF NOT EXISTS 'app_user'@'localhost' IDENTIFIED BY 'StrongPassword123!';
+GRANT ALL PRIVILEGES ON app_db.* TO 'app_user'@'localhost';
+FLUSH PRIVILEGES;
+
+USE app_db;
+
+CREATE TABLE stg_customers_raw (
+id INT AUTO_INCREMENT PRIMARY KEY,
+customer_id TEXT, company_name TEXT, contact_name TEXT, phone TEXT, email TEXT,
+address TEXT, city TEXT, state TEXT, zip TEXT, country TEXT, created_date TEXT, status TEXT
+) ENGINE=MyISAM;
+
+CREATE TABLE stg_dispatches_raw (
+id INT AUTO_INCREMENT PRIMARY KEY,
+dispatch_id TEXT, equipment_id TEXT, customer_id TEXT, dispatch_date TEXT,
+technician TEXT, service_type TEXT, hours_spent TEXT, labor_cost TEXT,
+resolution_summary TEXT, status TEXT
+) ENGINE=MyISAM;
+
+CREATE TABLE stg_equipment_raw (
+id INT AUTO_INCREMENT PRIMARY KEY,
+equipment_id TEXT, customer_id TEXT, model TEXT, serial_number TEXT,
+install_date TEXT, capacity_kw TEXT, voltage TEXT, warranty_expiration TEXT,
+status TEXT, location_notes TEXT
+) ENGINE=MyISAM;
+
+CREATE TABLE stg_parts_raw (
+id INT AUTO_INCREMENT PRIMARY KEY,
+part_id TEXT, part_name TEXT, category TEXT, manufacturer TEXT, supplier TEXT,
+unit_cost TEXT, unit_price TEXT, stock_quantity TEXT, reorder_level TEXT
+) ENGINE=MyISAM;
+
+CREATE TABLE stg_warranty_claims_raw (
+id INT AUTO_INCREMENT PRIMARY KEY,
+claim_id TEXT, equipment_id TEXT, dispatch_id TEXT, part_id TEXT,
+claim_date TEXT, claim_amount TEXT, approved_amount TEXT, status TEXT,
+denial_reason TEXT, claim_notes TEXT
+) ENGINE=MyISAM;
+EOF
+
+mariadb < /tmp/stg_layer.sql
+
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Loading stg data..."
+
+cat << 'EOF' > /tmp/2_stg_load.sql
+USE app_db;
+SET GLOBAL local_infile = 1;
+
+LOAD DATA LOCAL INFILE '/opt/data/customers.csv' INTO TABLE stg_customers_raw FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS (customer_id,company_name,contact_name,phone,email,address,city,state,zip,country,created_date,status);
+LOAD DATA LOCAL INFILE '/opt/data/dispatches.csv' INTO TABLE stg_dispatches_raw FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS (dispatch_id,equipment_id,customer_id,dispatch_date,technician,service_type,hours_spent,labor_cost,resolution_summary,status);
+LOAD DATA LOCAL INFILE '/opt/data/equipment.csv' INTO TABLE stg_equipment_raw FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS (equipment_id,customer_id,model,serial_number,install_date,capacity_kw,voltage,warranty_expiration,status,location_notes);
+LOAD DATA LOCAL INFILE '/opt/data/parts.csv' INTO TABLE stg_parts_raw FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS (part_id,part_name,category,manufacturer,supplier,unit_cost,unit_price,stock_quantity,reorder_level);
+LOAD DATA LOCAL INFILE '/opt/data/warranty_claims.csv' INTO TABLE stg_warranty_claims_raw FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS (claim_id,equipment_id,dispatch_id,part_id,claim_date,claim_amount,approved_amount,status,denial_reason,claim_notes);
+EOF
+
+mariadb --local-infile=1 < /tmp/2_stg_load.sql
+
+# -- ============================================================================
+# -- CREATING PROD TABLES
+# -- ============================================================================
+
+cat << 'EOF' > /tmp/prod_table.sql
+USE app_db;
+
+CREATE TABLE IF NOT EXISTS customers (
+customer_id VARCHAR(50) PRIMARY KEY,
+company_name VARCHAR(255),
+contact_name VARCHAR(255),
+email VARCHAR(255),
+phone VARCHAR(50),
+address VARCHAR(500),
+city VARCHAR(100),
+state VARCHAR(100),
+postal_code VARCHAR(20),
+country VARCHAR(100),
+status VARCHAR(50),
+created_date DATE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS equipment_units (
+equipment_id VARCHAR(50) PRIMARY KEY,
+customer_id VARCHAR(50) NOT NULL,
+serial_number VARCHAR(100),
+model VARCHAR(100),
+capacity_kw DECIMAL(10,2),
+voltage VARCHAR(50),
+install_date DATE,
+warranty_expiration DATE,
+status VARCHAR(50),
+location_notes VARCHAR(1000),
+CONSTRAINT fk_equipment_customer
+FOREIGN KEY (customer_id)
+REFERENCES customers(customer_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS service_logs (
+dispatch_id VARCHAR(50) PRIMARY KEY,
+equipment_id VARCHAR(50) NOT NULL,
+dispatch_date DATE,
+technician VARCHAR(255),
+service_type VARCHAR(255),
+resolution_summary VARCHAR(2000),
+hours_spent DECIMAL(10,2),
+labor_cost DECIMAL(12,2),
+status VARCHAR(50),
+CONSTRAINT fk_service_equipment
+FOREIGN KEY (equipment_id)
+REFERENCES equipment_units(equipment_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS parts_inventory (
+part_id VARCHAR(50) PRIMARY KEY,
+part_name VARCHAR(255),
+category VARCHAR(100),
+manufacturer VARCHAR(255),
+supplier VARCHAR(255),
+quantity_in_stock INT,
+unit_cost DECIMAL(12,2),
+unit_price DECIMAL(12,2),
+reorder_level INT
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS warranty_claims (
+claim_id VARCHAR(50) PRIMARY KEY,
+equipment_id VARCHAR(50) NOT NULL,
+dispatch_id VARCHAR(50),
+part_id VARCHAR(50),
+claim_date DATE,
+claim_amount DECIMAL(12,2),
+approved_amount DECIMAL(12,2),
+status VARCHAR(50),
+denial_reason VARCHAR(1000),
+claim_notes VARCHAR(2000),
+CONSTRAINT fk_claim_equipment
+FOREIGN KEY (equipment_id)
+REFERENCES equipment_units(equipment_id),
+CONSTRAINT fk_claim_dispatch
+FOREIGN KEY (dispatch_id)
+REFERENCES service_logs(dispatch_id),
+CONSTRAINT fk_claim_part
+FOREIGN KEY (part_id)
+REFERENCES parts_inventory(part_id)
+) ENGINE=InnoDB;
+EOF
+
+mariadb < /tmp/prod_table.sql
+
+# -- ============================================================================
+# -- COMPLETE CORRECTED DATA TRANSFORMATION SCRIPT LOADING DATA IN PRODUCTION.
+# -- ============================================================================
+
+cat << 'EOF' > /tmp/prod_load.sql
+USE app_db;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- Clear all silver tables
+TRUNCATE TABLE customers;
+TRUNCATE TABLE equipment_units;
+TRUNCATE TABLE service_logs;
+TRUNCATE TABLE parts_inventory;
+TRUNCATE TABLE warranty_claims;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+INSERT INTO customers (
+customer_id, company_name, contact_name, email, phone, address,
+city, state, postal_code, country, status, created_date
+)
+SELECT 
+TRIM(customer_id),
+TRIM(REGEXP_REPLACE(REGEXP_REPLACE(company_name, '<[^>]+>', ''), '\\s+', ' ')),
+TRIM(REGEXP_REPLACE(contact_name, '\\s+', ' ')),
+TRIM(LOWER(email)),
+CASE
+WHEN REGEXP_REPLACE(phone, '[^0-9]', '') REGEXP '^1[0-9]{10}$'
+THEN RIGHT(REGEXP_REPLACE(phone, '[^0-9]', ''), 10)
+WHEN REGEXP_REPLACE(phone, '[^0-9]', '') REGEXP '^[0-9]{10}$'
+THEN REGEXP_REPLACE(phone, '[^0-9]', '')
+ELSE NULL
+END,
+TRIM(REGEXP_REPLACE(REGEXP_REPLACE(address, '<[^>]+>', ''), '\\s+', ' ')),
+TRIM(REGEXP_REPLACE(city, '\\s+', ' ')),
+TRIM(state),
+TRIM(zip),
+CASE 
+WHEN TRIM(country) IN ('US', 'USA', 'United States') THEN 'United States'
+WHEN TRIM(country) = '' OR country IS NULL THEN NULL
+ELSE TRIM(country)
+END,
+LOWER(TRIM(status)),
+CASE
+WHEN created_date REGEXP '^[0-9]{2}/[0-9]{2}/[0-9]{4}$' THEN STR_TO_DATE(created_date, '%m/%d/%Y')
+WHEN created_date REGEXP '^[0-9]{2}-[0-9]{2}-[0-9]{4}$' THEN STR_TO_DATE(created_date, '%m-%d-%Y')
+WHEN created_date REGEXP '^[0-9]{4}-[0-9]{2}-[0-9]{2}' THEN STR_TO_DATE(SUBSTRING(created_date, 1, 10), '%Y-%m-%d')
+WHEN created_date REGEXP '^[0-9]{4}/[0-9]{2}/[0-9]{2}$' THEN STR_TO_DATE(created_date, '%Y/%m/%d')
+ELSE NULL
+END
+FROM stg_customers_raw b
+WHERE b.id IN (SELECT MIN(id) FROM stg_customers_raw GROUP BY customer_id)
+AND customer_id IS NOT NULL AND TRIM(customer_id) != '';
+
+INSERT INTO equipment_units(
+equipment_id, customer_id, serial_number, model, capacity_kw, voltage,
+install_date, warranty_expiration, status, location_notes)
+SELECT 
+TRIM(e.equipment_id),
+TRIM(e.customer_id),
+TRIM(e.serial_number),
+TRIM(e.model),
+CAST(NULLIF(TRIM(e.capacity_kw), '') AS DECIMAL(10,2)),
+TRIM(e.voltage),
+CASE
+WHEN e.install_date REGEXP '^[0-9]{4}/[0-9]{2}/[0-9]{2}$' THEN STR_TO_DATE(e.install_date, '%Y/%m/%d')
+WHEN e.install_date REGEXP '^[0-9]{2}/[0-9]{2}/[0-9]{4}$' THEN STR_TO_DATE(e.install_date, '%m/%d/%Y')
+WHEN e.install_date REGEXP '^[0-9]{2}-[0-9]{2}-[0-9]{4}$' THEN STR_TO_DATE(e.install_date, '%m-%d-%Y')
+WHEN e.install_date REGEXP '^[0-9]{4}-[0-9]{2}-[0-9]{2}' THEN STR_TO_DATE(SUBSTRING(e.install_date, 1, 10), '%Y-%m-%d')
+ELSE NULL
+END,
+CASE
+WHEN e.warranty_expiration REGEXP '^[0-9]{4}-[0-9]{2}-[0-9]{2}' THEN STR_TO_DATE(SUBSTRING(e.warranty_expiration, 1, 10), '%Y-%m-%d')
+WHEN e.warranty_expiration REGEXP '^[0-9]{2}/[0-9]{2}/[0-9]{4}$' THEN STR_TO_DATE(e.warranty_expiration, '%m/%d/%Y')
+WHEN e.warranty_expiration REGEXP '^[0-9]{2}-[0-9]{2}-[0-9]{4}$' THEN STR_TO_DATE(e.warranty_expiration, '%m-%d-%Y')
+WHEN e.warranty_expiration REGEXP '^[0-9]{4}/[0-9]{2}/[0-9]{2}$' THEN STR_TO_DATE(e.warranty_expiration, '%Y/%m/%d')
+ELSE NULL
+END,
+LOWER(TRIM(e.status)),
+TRIM(
+REGEXP_REPLACE(
+REGEXP_REPLACE(e.location_notes, '<[^>]+>', ''),'\\s+',' '))
+FROM stg_equipment_raw e
+WHERE e.id IN (SELECT MIN(id) FROM stg_equipment_raw GROUP BY equipment_id)
+AND e.equipment_id IS NOT NULL AND TRIM(e.equipment_id) != ''
+AND EXISTS (SELECT 1 FROM customers c WHERE TRIM(e.customer_id) = c.customer_id);
+
+INSERT INTO service_logs (
+dispatch_id, equipment_id, dispatch_date, technician,
+service_type, resolution_summary, hours_spent, labor_cost, status
+)
+SELECT 
+TRIM(d.dispatch_id),
+TRIM(d.equipment_id),
+CASE
+WHEN d.dispatch_date REGEXP '^[0-9]{4}-[0-9]{2}-[0-9]{2}' THEN STR_TO_DATE(SUBSTRING(d.dispatch_date, 1, 10), '%Y-%m-%d')
+WHEN d.dispatch_date REGEXP '^[0-9]{2}/[0-9]{2}/[0-9]{4}$' THEN STR_TO_DATE(d.dispatch_date, '%m/%d/%Y')
+WHEN d.dispatch_date REGEXP '^[0-9]{2}-[0-9]{2}-[0-9]{4}$' THEN STR_TO_DATE(d.dispatch_date, '%m-%d-%Y')
+WHEN d.dispatch_date REGEXP '^[0-9]{4}/[0-9]{2}/[0-9]{2}$' THEN STR_TO_DATE(d.dispatch_date, '%Y/%m/%d')
+ELSE NULL
+END,
+NULLIF(TRIM(REGEXP_REPLACE(d.technician, '\\s+', ' ')), 'NULL'),
+TRIM(d.service_type),
+TRIM(
+REGEXP_REPLACE(
+REGEXP_REPLACE(d.resolution_summary, '<[^>]+>', ''),
+'\\s+',' ')),
+CAST(NULLIF(TRIM(d.hours_spent), '') AS DECIMAL(10,2)),
+CAST(TRIM(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(d.labor_cost, 'USD', ''), '\\$', ''), ',', '')) AS DECIMAL(12,2)),
+LOWER(TRIM(d.status))
+FROM stg_dispatches_raw d
+WHERE d.id IN (SELECT MIN(id) FROM stg_dispatches_raw GROUP BY dispatch_id)
+AND d.dispatch_id IS NOT NULL AND TRIM(d.dispatch_id) != ''
+AND EXISTS (SELECT 1 FROM equipment_units e WHERE TRIM(d.equipment_id) = e.equipment_id);
+
+INSERT INTO parts_inventory (
+part_id, part_name, category, manufacturer, supplier,
+quantity_in_stock, unit_cost, unit_price, reorder_level
+)
+SELECT 
+TRIM(part_id),
+TRIM(REGEXP_REPLACE(part_name, '\\s+', ' ')),
+TRIM(category),
+TRIM(manufacturer),
+TRIM(supplier),
+CAST(NULLIF(TRIM(stock_quantity), '') AS SIGNED),
+CAST(TRIM(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(unit_cost, 'USD', ''), '\\$', ''), ',', '')) AS DECIMAL(12,2)),
+CAST(TRIM(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(unit_price, 'USD', ''), '\\$', ''), ',', '')) AS DECIMAL(12,2)),
+CAST(NULLIF(TRIM(reorder_level), '') AS SIGNED)
+FROM stg_parts_raw
+WHERE id IN (SELECT MIN(id) FROM stg_parts_raw GROUP BY part_id)
+AND part_id IS NOT NULL AND TRIM(part_id) != '';
+
+INSERT INTO warranty_claims (
+claim_id, equipment_id, dispatch_id, part_id, claim_date,
+claim_amount, approved_amount, status, denial_reason, claim_notes)
+SELECT 
+TRIM(w.claim_id),
+TRIM(w.equipment_id),
+-- Set dispatch_id to NULL if it does not exist in service_logs
+CASE 
+WHEN EXISTS (SELECT 1 FROM service_logs s WHERE s.dispatch_id = TRIM(w.dispatch_id)) 
+THEN TRIM(w.dispatch_id)
+ELSE NULL 
+END,
+-- Set part_id to NULL if it does not exist in parts_inventory
+CASE 
+WHEN EXISTS (SELECT 1 FROM parts_inventory p WHERE p.part_id = TRIM(w.part_id)) 
+THEN TRIM(w.part_id)
+ELSE NULL 
+END,
+CASE
+WHEN w.claim_date REGEXP '^[0-9]{4}-[0-9]{2}-[0-9]{2}' THEN STR_TO_DATE(SUBSTRING(w.claim_date, 1, 10), '%Y-%m-%d')
+WHEN w.claim_date REGEXP '^[0-9]{2}/[0-9]{2}/[0-9]{4}$' THEN STR_TO_DATE(w.claim_date, '%m/%d/%Y')
+WHEN w.claim_date REGEXP '^[0-9]{2}-[0-9]{2}-[0-9]{4}$' THEN STR_TO_DATE(w.claim_date, '%m-%d-%Y')
+WHEN w.claim_date REGEXP '^[0-9]{4}/[0-9]{2}/[0-9]{2}$' THEN STR_TO_DATE(w.claim_date, '%Y/%m/%d')
+ELSE NULL
+END,
+CAST(TRIM(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(w.claim_amount, 'USD', ''), '\\$', ''), ',', '')) AS DECIMAL(12,2)),
+CAST(TRIM(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(w.approved_amount, 'USD', ''), '\\$', ''), ',', '')) AS DECIMAL(12,2)),
+LOWER(TRIM(w.status)),
+CASE 
+WHEN TRIM(REGEXP_REPLACE(REGEXP_REPLACE(w.denial_reason, '<[^>]*>', ''), '\\s+', ' ')) IN ('', 'N/A') 
+THEN 'N/A'
+ELSE TRIM(REGEXP_REPLACE(REGEXP_REPLACE(w.denial_reason, '<[^>]*>', ''), '\\s+', ' '))
+END,
+TRIM(REGEXP_REPLACE(w.claim_notes, '\\s+', ' '))
+FROM stg_warranty_claims_raw w
+WHERE w.id IN (SELECT MIN(id) FROM stg_warranty_claims_raw GROUP BY claim_id)
+AND w.claim_id IS NOT NULL AND TRIM(w.claim_id) != ''
+AND EXISTS (SELECT 1 FROM equipment_units e WHERE TRIM(w.equipment_id) = e.equipment_id);
+EOF
+
+mariadb --local-infile=1 < /tmp/prod_load.sql
+
+echo "================================================================="
+echo PIPELINE SUCCESSFUL, CHECK DATA IN PRODUCTION."
+echo "================================================================="
