@@ -1,0 +1,26 @@
+# /etc/mysql/mariadb.conf.d/60-galera.cnf
+# Identical on all three nodes (A 172.31.39.218, B 172.31.40.212, C 172.31.35.1)
+
+[galera]
+# Cluster identity: must be identical on all three nodes or the handshake is rejected
+wsrep_cluster_name       = "Milestone3 Galera Cluster"
+
+# Galera replication library
+wsrep_provider           = /usr/lib/galera/libgalera_smm.so
+
+# Group communication: private IPs of all three nodes
+wsrep_cluster_address    = gcomm://172.31.39.218,172.31.40.212,172.31.35.1
+wsrep_on                 = ON
+
+# Galera replicates row-based write-sets
+binlog_format            = ROW
+
+# Interleaved auto-increment locking (required so parallel appliers do not collide)
+innodb_autoinc_lock_mode = 2
+
+# Accept connections on all interfaces
+bind-address = 0.0.0.0
+
+# Performance
+innodb_flush_log_at_trx_commit = 0
+wsrep_slave_threads = 4
