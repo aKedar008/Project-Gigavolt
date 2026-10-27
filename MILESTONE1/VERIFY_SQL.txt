@@ -1,0 +1,268 @@
+USE app_db;
+
+-- =========================================================
+-- 1. ROW COUNTS
+-- =========================================================
+
+SELECT 'stg_customers_raw' AS table_name, COUNT(*) AS row_count
+FROM stg_customers_raw
+UNION ALL
+SELECT 'customers', COUNT(*) FROM customers
+UNION ALL
+SELECT 'stg_equipment_raw', COUNT(*) FROM stg_equipment_raw
+UNION ALL
+SELECT 'equipment_units', COUNT(*) FROM equipment_units
+UNION ALL
+SELECT 'stg_dispatches_raw', COUNT(*) FROM stg_dispatches_raw
+UNION ALL
+SELECT 'service_logs', COUNT(*) FROM service_logs
+UNION ALL
+SELECT 'stg_parts_raw', COUNT(*) FROM stg_parts_raw
+UNION ALL
+SELECT 'parts_inventory', COUNT(*) FROM parts_inventory
+UNION ALL
+SELECT 'stg_warranty_claims_raw', COUNT(*) FROM stg_warranty_claims_raw
+UNION ALL
+SELECT 'warranty_claims', COUNT(*) FROM warranty_claims;
+
+
+-- =========================================================
+-- 2. CONFIRM FOREIGN KEYS EXIST
+-- =========================================================
+
+SELECT
+    TABLE_NAME,
+    CONSTRAINT_NAME,
+    COLUMN_NAME,
+    REFERENCED_TABLE_NAME,
+    REFERENCED_COLUMN_NAME
+FROM information_schema.KEY_COLUMN_USAGE
+WHERE TABLE_SCHEMA = 'app_db'
+  AND REFERENCED_TABLE_NAME IS NOT NULL
+ORDER BY TABLE_NAME, CONSTRAINT_NAME;
+
+
+-- =========================================================
+-- 3. EQUIPMENT -> CUSTOMER ORPHANS
+-- Expected: 0
+-- =========================================================
+
+SELECT COUNT(*) AS orphan_equipment_customers
+FROM equipment_units e
+LEFT JOIN customers c
+    ON e.customer_id = c.customer_id
+WHERE c.customer_id IS NULL;
+
+
+-- =========================================================
+-- 4. SERVICE LOG -> EQUIPMENT ORPHANS
+-- Expected: 0
+-- =========================================================
+
+SELECT COUNT(*) AS orphan_service_equipment
+FROM service_logs s
+LEFT JOIN equipment_units e
+    ON s.equipment_id = e.equipment_id
+WHERE e.equipment_id IS NULL;
+
+
+-- =========================================================
+-- 5. WARRANTY -> EQUIPMENT ORPHANS
+-- Expected: 0
+-- =========================================================
+
+SELECT COUNT(*) AS orphan_claim_equipment
+FROM warranty_claims w
+LEFT JOIN equipment_units e
+    ON w.equipment_id = e.equipment_id
+WHERE e.equipment_id IS NULL;
+
+
+-- =========================================================
+-- 6. WARRANTY -> DISPATCH ORPHANS
+-- NULL dispatch_id is allowed
+-- Expected: 0
+-- =========================================================
+
+SELECT COUNT(*) AS orphan_claim_dispatch
+FROM warranty_claims w
+LEFT JOIN service_logs s
+    ON w.dispatch_id = s.dispatch_id
+WHERE w.dispatch_id IS NOT NULL
+  AND s.dispatch_id IS NULL;
+
+
+-- =========================================================
+-- 7. WARRANTY -> PART ORPHANS
+-- NULL part_id is allowed
+-- Expected: 0
+-- =========================================================
+
+SELECT COUNT(*) AS orphan_claim_part
+FROM warranty_claims w
+LEFT JOIN parts_inventory p
+    ON w.part_id = p.part_id
+WHERE w.part_id IS NOT NULL
+  AND p.part_id IS NULL;
+
+
+-- =========================================================
+-- 8. PRIMARY KEY DUPLICATE CHECK
+-- Expected: 0 for every table
+-- =========================================================
+
+SELECT 'customers' AS table_name,
+       COUNT(*) - COUNT(DISTINCT customer_id) AS duplicate_keys
+FROM customers
+
+UNION ALL
+
+SELECT 'equipment_units',
+       COUNT(*) - COUNT(DISTINCT equipment_id)
+FROM equipment_units
+
+UNION ALL
+
+SELECT 'service_logs',
+       COUNT(*) - COUNT(DISTINCT dispatch_id)
+FROM service_logs
+
+UNION ALL
+
+SELECT 'parts_inventory',
+       COUNT(*) - COUNT(DISTINCT part_id)
+FROM parts_inventory
+
+UNION ALL
+
+SELECT 'warranty_claims',
+       COUNT(*) - COUNT(DISTINCT claim_id)
+FROM warranty_claims;
+
+
+-- =========================================================
+-- 9. PHONE VALIDATION
+-- Expected: 0
+-- =========================================================
+
+SELECT COUNT(*) AS invalid_phone_numbers
+FROM customers
+WHERE phone IS NOT NULL
+  AND phone NOT REGEXP '^[0-9]{10}$';
+
+
+-- =========================================================
+-- 10. HTML VALIDATION
+-- Expected: 0
+-- =========================================================
+
+SELECT
+    'customers.company_name' AS field_name,
+    COUNT(*) AS html_remaining
+FROM customers
+WHERE company_name REGEXP '<[^>]+>'
+
+UNION ALL
+
+SELECT
+    'customers.address',
+    COUNT(*)
+FROM customers
+WHERE address REGEXP '<[^>]+>'
+
+UNION ALL
+
+SELECT
+    'equipment_units.location_notes',
+    COUNT(*)
+FROM equipment_units
+WHERE location_notes REGEXP '<[^>]+>'
+
+UNION ALL
+
+SELECT
+    'service_logs.resolution_summary',
+    COUNT(*)
+FROM service_logs
+WHERE resolution_summary REGEXP '<[^>]+>'
+
+UNION ALL
+
+SELECT
+    'warranty_claims.denial_reason',
+    COUNT(*)
+FROM warranty_claims
+WHERE denial_reason REGEXP '<[^>]+>'
+
+UNION ALL
+
+SELECT
+    'warranty_claims.claim_notes',
+    COUNT(*)
+FROM warranty_claims
+WHERE claim_notes REGEXP '<[^>]+>';
+
+
+-- =========================================================
+-- 11. PHONE / IMPORTANT NULL CHECKS
+-- =========================================================
+
+SELECT
+    'equipment_units.customer_id' AS field_name,
+    COUNT(*) AS null_count
+FROM equipment_units
+WHERE customer_id IS NULL
+
+UNION ALL
+
+SELECT
+    'service_logs.equipment_id',
+    COUNT(*)
+FROM service_logs
+WHERE equipment_id IS NULL
+
+UNION ALL
+
+SELECT
+    'warranty_claims.equipment_id',
+    COUNT(*)
+FROM warranty_claims
+WHERE equipment_id IS NULL
+
+UNION ALL
+
+SELECT
+    'customers.customer_id',
+    COUNT(*)
+FROM customers
+WHERE customer_id IS NULL;
+
+
+-- =========================================================
+-- 12. CHECK SILVER DUPLICATES
+-- =========================================================
+
+SELECT customer_id, COUNT(*) AS occurrences
+FROM customers
+GROUP BY customer_id
+HAVING COUNT(*) > 1;
+
+SELECT equipment_id, COUNT(*) AS occurrences
+FROM equipment_units
+GROUP BY equipment_id
+HAVING COUNT(*) > 1;
+
+SELECT dispatch_id, COUNT(*) AS occurrences
+FROM service_logs
+GROUP BY dispatch_id
+HAVING COUNT(*) > 1;
+
+SELECT part_id, COUNT(*) AS occurrences
+FROM parts_inventory
+GROUP BY part_id
+HAVING COUNT(*) > 1;
+
+SELECT claim_id, COUNT(*) AS occurrences
+FROM warranty_claims
+GROUP BY claim_id
+HAVING COUNT(*) > 1;
