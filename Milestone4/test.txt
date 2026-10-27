@@ -1,0 +1,115 @@
+cat > milestone4_video_demo.sh <<'EOF'
+#!/bin/bash
+
+echo "============================================================"
+echo "ISTM 622 Project Gigavolt - Milestone 4 Demonstration"
+echo "Text Chunking, Embeddings, ChromaDB, HNSW Benchmark"
+echo "============================================================"
+echo
+
+echo "STEP 1 - Confirm environment"
+echo "------------------------------------------------------------"
+whoami
+hostname
+pwd
+which python
+python -V
+echo
+
+read -p "Press Enter to continue..."
+
+echo
+echo "STEP 2 - Show project files"
+echo "------------------------------------------------------------"
+ls -lh
+echo
+
+read -p "Press Enter to continue..."
+
+echo
+echo "STEP 3 - Show ingestion summary"
+echo "------------------------------------------------------------"
+cat ingestion_summary.json
+echo
+echo
+
+read -p "Press Enter to continue..."
+
+echo
+echo "STEP 4 - Show HNSW configuration from ChromaDB metadata"
+echo "------------------------------------------------------------"
+python - <<'PY'
+import chromadb
+import json
+
+client = chromadb.PersistentClient(path="/opt/gigavolt-milestone4/chroma_db")
+collection = client.get_collection("gigavolt_m4")
+
+print("Collection name:", collection.name)
+print("Vector count:", collection.count())
+print("Collection metadata:")
+print(json.dumps(collection.metadata, indent=2))
+PY
+echo
+
+read -p "Press Enter to continue..."
+
+echo
+echo "STEP 5 - Show benchmark summary"
+echo "------------------------------------------------------------"
+cat benchmark_summary.json
+echo
+echo
+
+read -p "Press Enter to continue..."
+
+echo
+echo "STEP 6 - Show benchmark CSV statistics"
+echo "------------------------------------------------------------"
+python - <<'PY'
+import pandas as pd
+
+df = pd.read_csv("benchmark_results.csv")
+
+print("First 5 benchmark rows:")
+print(df.head().to_string(index=False))
+print()
+print("Latency statistics:")
+print(df["latency_ms"].describe(percentiles=[0.5, 0.95, 0.99]).to_string())
+print()
+print("Recall by query:")
+print(df.groupby("query")["recall_at_k"].mean().to_string())
+PY
+echo
+
+read -p "Press Enter to continue..."
+
+echo
+echo "STEP 7 - Run live vector search: chiller compressor overload"
+echo "------------------------------------------------------------"
+printf "chiller compressor overload\nquit\n" | python gigavolt_m4_pipeline.py search
+echo
+
+read -p "Press Enter to continue..."
+
+echo
+echo "STEP 8 - Run live vector search: emergency response fire safety"
+echo "------------------------------------------------------------"
+printf "emergency response fire safety\nquit\n" | python gigavolt_m4_pipeline.py search
+echo
+
+echo "============================================================"
+echo "Demo complete."
+echo
+echo "Key points to mention:"
+echo "  - 25 supported documents processed"
+echo "  - 29 chunks stored in ChromaDB"
+echo "  - Embedding model: all-MiniLM-L6-v2"
+echo "  - Chunk size: 384 estimated tokens"
+echo "  - Overlap: 64 estimated tokens"
+echo "  - HNSW: M=16, ef_construction=200, ef_search=50"
+echo "  - P50 retrieval latency: about 1.19 ms"
+echo "  - Recall@5: 1.0"
+echo "  - Sub-20ms median latency target passed"
+echo "============================================================"
+EOF

@@ -1,0 +1,116 @@
+#!/bin/bash
+set -e
+
+exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+
+export DEBIAN_FRONTEND=noninteractive
+UBUNTU_CODENAME=$(lsb_release -cs)
+
+# ------------------------------------------------------------------------------
+# 1. Base dependencies & MariaDB 11.8 repository setup
+# ------------------------------------------------------------------------------
+
+mkdir -p /etc/apt/keyrings
+
+curl -fsSL https://mariadb.org/mariadb_release_signing_key.pgp | \
+  gpg --dearmor --yes -o /etc/apt/keyrings/mariadb-keyring.gpg
+
+echo "deb [signed-by=/etc/apt/keyrings/mariadb-keyring.gpg] https://deb.mariadb.org/11.8/ubuntu ${UBUNTU_CODENAME} main" > /etc/apt/sources.list.d/mariadb.list
+
+apt-get update -y
+
+apt-get install -y \
+  mariadb-server \
+  mariadb-client \
+  python3-pip \
+  python3-venv \
+  wget \
+  curl \
+  unzip
+
+# Clean apt cache to free disk space immediately
+apt-get clean
+rm -rf /var/lib/apt/lists/*
+
+systemctl enable --now mariadb
+
+# ------------------------------------------------------------------------------
+# 2. Database and student user permissions
+# ------------------------------------------------------------------------------
+
+mariadb -u root <<'EOF'
+CREATE DATABASE IF NOT EXISTS gigavolt_vector_lab;
+CREATE USER IF NOT EXISTS 'student'@'%' IDENTIFIED BY 'StudentVector2026!';
+CREATE USER IF NOT EXISTS 'student'@'localhost' IDENTIFIED BY 'StudentVector2026!';
+GRANT ALL PRIVILEGES ON gigavolt_vector_lab.* TO 'student'@'%', 'student'@'localhost';
+FLUSH PRIVILEGES;
+EOF
+
+# ------------------------------------------------------------------------------
+# 3. Python virtual environment & CPU-optimized deep learning dependencies
+# ------------------------------------------------------------------------------
+
+# Route pip temp operations to EBS disk (/var/tmp) instead of RAM tmpfs (/tmp)
+export TMPDIR=/var/tmp
+
+python3 -m venv /opt/vector_env
+
+/opt/vector_env/bin/pip install --no-cache-dir --upgrade pip
+
+# Install lightweight CPU-only PyTorch first with no wheel caching
+/opt/vector_env/bin/pip install --no-cache-dir torch --extra-index-url https://download.pytorch.org/whl/cpu
+
+# Install remaining lab dependencies
+/opt/vector_env/bin/pip install --no-cache-dir sentence-transformers pymysql numpy
+
+# ------------------------------------------------------------------------------
+# 4. Download lab scripts from course server
+# ------------------------------------------------------------------------------
+
+DOWNLOAD_URL="https://622.gomillion.org/veclab"
+
+wget -q "${DOWNLOAD_URL}/generate_embeddings.py" -O /home/ubuntu/generate_embeddings.py || \
+  wget -q "http://622.gomillion.org/veclab/generate_embeddings.py" -O /home/ubuntu/generate_embeddings.py
+
+wget -q "${DOWNLOAD_URL}/encode_query.py" -O /home/ubuntu/encode_query.py || \
+  wget -q "http://622.gomillion.org/veclab/encode_query.py" -O /home/ubuntu/encode_query.py
+
+# ------------------------------------------------------------------------------
+# 5. Download and unzip Gigavolt Milestone 4 unstructured data
+# ------------------------------------------------------------------------------
+
+PROJECT_DIR="/opt/gigavolt-milestone4"
+DATA_DIR="${PROJECT_DIR}/data"
+
+mkdir -p "${DATA_DIR}"
+
+cd "${DATA_DIR}"
+
+wget -q https://622.gomillion.org/data/UnstructuredData.zip -O UnstructuredData.zip
+
+unzip -o -q UnstructuredData.zip
+
+# Optional: leave the zip file for evidence/debugging.
+# If disk space is tight, uncomment the next line:
+# rm -f UnstructuredData.zip
+
+# ------------------------------------------------------------------------------
+# 6. File permissions and student environment shortcuts
+# ------------------------------------------------------------------------------
+
+chmod +x /home/ubuntu/*.py 2>/dev/null || true
+
+chown -R ubuntu:ubuntu /home/ubuntu
+chown -R ubuntu:ubuntu "${PROJECT_DIR}"
+
+cat <<'EOF' >> /home/ubuntu/.bashrc
+source /opt/vector_env/bin/activate
+alias mariadb="mariadb -u student -pStudentVector2026! gigavolt_vector_lab"
+EOF
+
+echo "================================================================="
+echo "User Data setup complete."
+echo "Gigavolt data is in: /opt/gigavolt-milestone4/data"
+echo "Python venv is: /opt/vector_env"
+echo "Check log with: sudo tail -f /var/log/user-data.log"
+echo "================================================================="
