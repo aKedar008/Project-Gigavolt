@@ -1,0 +1,239 @@
+[
+  {
+    "question": "What are common failure modes for X-7000 batteries in high-temperature environments?",
+    "answer": "- **Telemetry observations:** X-7000 records show a DC overcurrent trip at **62 \u00b0C** (ERR_INV_404; \u201cinspect thyristor pack\u201d) and a blown DC string fuse at **85 \u00b0C** (ERR_FUSE_001; \u201creplace semiconductor fuse\u201d). These are observed alongside high temperatures, but the records do **not** establish that temperature caused either fault. [S1][S2]\n- **Engineering documentation:** The manual warns that improper thermal management can trigger an irreversible thermal event and identifies rapid cell-temperature rise, low cell voltage, and detected off-gassing as early warning indicators. [S4] The emergency SOP classifies temperatures above **75 \u00b0C**, with specified gas detection or ERR_BMS_708, as confirmed thermal runaway; the 85 \u00b0C telemetry record alone does not document those other indicators. [S7][S2]\n\nThe supplied evidence is limited, so it does not establish a comprehensive list of common high-temperature failure modes.",
+    "sources_used": [
+      "mongo",
+      "vector"
+    ],
+    "retrieval_timings": {
+      "mongo_ms": 190.16,
+      "vector_ms": 464.07
+    },
+    "retrieval_total_ms": 654.64,
+    "llm_ms": 4882.08,
+    "total_ms": 5536.99,
+    "provenance": {
+      "S1": {
+        "source_type": "mongodb",
+        "source_id": "TLM-90200",
+        "source_name": "telemetry",
+        "timestamp": "2026-09-18T13:00:00.000Z",
+        "chunk_index": null
+      },
+      "S2": {
+        "source_type": "mongodb",
+        "source_id": "TLM-90196",
+        "source_name": "telemetry",
+        "timestamp": "2026-09-18T11:30:00.000Z",
+        "chunk_index": null
+      },
+      "S3": {
+        "source_type": "mongodb",
+        "source_id": "TLM-90190",
+        "source_name": "telemetry",
+        "timestamp": "2026-09-17T13:00:00.000Z",
+        "chunk_index": null
+      },
+      "S4": {
+        "source_type": "vector",
+        "source_id": "d2b0fb91a7dd686e21751492bf546296f24509af",
+        "source_name": "Unstructured Data/GV-MAN-X7000-001 Manual.pdf",
+        "timestamp": "2026-10-22T16:18:32.292935+00:00",
+        "chunk_index": 0
+      },
+      "S5": {
+        "source_type": "vector",
+        "source_id": "eef2bb7a3dd418d7ee2d35f835653f274c06c0fc",
+        "source_name": "Unstructured Data/GV-INC-2024-119 Field Incident Low Isolation Trip.pdf",
+        "timestamp": "2026-10-22T16:18:31.356208+00:00",
+        "chunk_index": 0
+      },
+      "S6": {
+        "source_type": "vector",
+        "source_id": "42f8733550c8c3f8a9ff8d338eaa512119e5ca5f",
+        "source_name": "Unstructured Data/GV-SOP-DECOM-601 SOP EOL Decomissioning.pdf",
+        "timestamp": "2026-10-22T16:18:32.607355+00:00",
+        "chunk_index": 0
+      },
+      "S7": {
+        "source_type": "vector",
+        "source_id": "8edd9efff658fbdb8161ea26fb2dff0f11bd9a45",
+        "source_name": "Unstructured Data/GV-SOP-SAFETY-900 SOP BESS Emergency Response and Fire Safety.pdf",
+        "timestamp": "2026-10-22T16:18:32.892131+00:00",
+        "chunk_index": 0
+      }
+    },
+    "citation_validation": {
+      "valid_citations": [
+        "S1",
+        "S2",
+        "S4",
+        "S7"
+      ],
+      "invalid_citations": [],
+      "citation_validation_passed": true
+    }
+  },
+  {
+    "question": "Show me service history for equipment SN-4829 and related warranty claims.",
+    "answer": "**Service history:** The available record lists one service event for SN-4829, a PowerStation G-3500: preventive maintenance on 2026-08-15. The record says the battery enclosure, cooling system, and electrical connections were inspected. This is a **synthetic/demo record**, not verified service history. [S1]\n\n**Related warranty claim:** Claim CLM-4829-001, dated 2026-08-16, is listed as a closed Preventive Service Review for 450.00, with no failure code. The same synthetic/demo record lists the warranty as active through 2027-12-31. [S1]\n\nThe retrieved telemetry separately shows standby, no fault code, and 95% SOC on September 16\u201318, 2026; these are telemetry observations, not service events. [S2][S3][S4] The evidence does not establish whether there are additional service records or warranty claims.",
+    "sources_used": [
+      "mongo",
+      "sql",
+      "vector"
+    ],
+    "retrieval_timings": {
+      "sql_ms": 371.91,
+      "mongo_ms": 8.8,
+      "vector_ms": 34.08
+    },
+    "retrieval_total_ms": 414.89,
+    "llm_ms": 4036.94,
+    "total_ms": 4451.95,
+    "provenance": {
+      "S1": {
+        "source_type": "sql",
+        "source_id": "SVC-4829-001",
+        "source_name": "gigavolt_m5",
+        "timestamp": null,
+        "chunk_index": null
+      },
+      "S2": {
+        "source_type": "mongodb",
+        "source_id": "TLM-90198",
+        "source_name": "telemetry",
+        "timestamp": "2026-09-18T12:15:00.000Z",
+        "chunk_index": null
+      },
+      "S3": {
+        "source_type": "mongodb",
+        "source_id": "TLM-90188",
+        "source_name": "telemetry",
+        "timestamp": "2026-09-17T12:15:00.000Z",
+        "chunk_index": null
+      },
+      "S4": {
+        "source_type": "mongodb",
+        "source_id": "TLM-90178",
+        "source_name": "telemetry",
+        "timestamp": "2026-09-16T12:15:00.000Z",
+        "chunk_index": null
+      },
+      "S5": {
+        "source_type": "vector",
+        "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+        "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+        "timestamp": "2026-10-22T16:18:33.005109+00:00",
+        "chunk_index": 0
+      },
+      "S6": {
+        "source_type": "vector",
+        "source_id": "3ae350afc5d2fcdea33627d6fcdc04a682d3d473",
+        "source_name": "Unstructured Data/GV-MAN-C1200-003 Manual.pdf",
+        "timestamp": "2026-10-22T16:18:31.602545+00:00",
+        "chunk_index": 1
+      },
+      "S7": {
+        "source_type": "vector",
+        "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+        "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+        "timestamp": "2026-10-22T16:18:31.177967+00:00",
+        "chunk_index": 0
+      },
+      "S8": {
+        "source_type": "vector",
+        "source_id": "eef2bb7a3dd418d7ee2d35f835653f274c06c0fc",
+        "source_name": "Unstructured Data/GV-INC-2024-119 Field Incident Low Isolation Trip.pdf",
+        "timestamp": "2026-10-22T16:18:31.356208+00:00",
+        "chunk_index": 0
+      }
+    },
+    "citation_validation": {
+      "valid_citations": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "invalid_citations": [],
+      "citation_validation_passed": true
+    }
+  },
+  {
+    "question": "What maintenance actions are recommended after an X-7000 inverter fault?",
+    "answer": "For an **ERR_INV_404 (DC overcurrent) fault**, the X-7000 manual recommends inspecting the **INV-SCR-9901 thyristor pack and output fuses**, and checking the AC-grid synchronization logs. [S7] Before opening the inverter bay, lock out the high-voltage DC links and verify the capacitors have discharged below 5.0 V. [S6]\n\nFor units built before October 2024 with **persistent ERR_INV_404 logs**, the engineering change order calls for retrofit kit **RET-X7-019** and inverter DSP firmware **v2.4.11-b or later**. [S6] The telemetry records also note \u201cinspect thyristor pack,\u201d but those are observations from specific fault events, not a general maintenance procedure. [S1][S3]",
+    "sources_used": [
+      "mongo",
+      "vector"
+    ],
+    "retrieval_timings": {
+      "mongo_ms": 1.05,
+      "vector_ms": 25.41
+    },
+    "retrieval_total_ms": 26.54,
+    "llm_ms": 4191.5,
+    "total_ms": 4218.14,
+    "provenance": {
+      "S1": {
+        "source_type": "mongodb",
+        "source_id": "TLM-90200",
+        "source_name": "telemetry",
+        "timestamp": "2026-09-18T13:00:00.000Z",
+        "chunk_index": null
+      },
+      "S2": {
+        "source_type": "mongodb",
+        "source_id": "TLM-90196",
+        "source_name": "telemetry",
+        "timestamp": "2026-09-18T11:30:00.000Z",
+        "chunk_index": null
+      },
+      "S3": {
+        "source_type": "mongodb",
+        "source_id": "TLM-90190",
+        "source_name": "telemetry",
+        "timestamp": "2026-09-17T13:00:00.000Z",
+        "chunk_index": null
+      },
+      "S4": {
+        "source_type": "vector",
+        "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+        "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+        "timestamp": "2026-10-22T16:18:31.177967+00:00",
+        "chunk_index": 0
+      },
+      "S5": {
+        "source_type": "vector",
+        "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+        "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+        "timestamp": "2026-10-22T16:18:33.005109+00:00",
+        "chunk_index": 0
+      },
+      "S6": {
+        "source_type": "vector",
+        "source_id": "9e82d0b230857775d848c7836d090069b861dd45",
+        "source_name": "Unstructured Data/GV-ECO-2024-019 Engineering Change Order.pdf",
+        "timestamp": "2026-10-22T16:18:30.705206+00:00",
+        "chunk_index": 0
+      },
+      "S7": {
+        "source_type": "vector",
+        "source_id": "69bea7fc90c55dae577be4613b9c6623cce23278",
+        "source_name": "Unstructured Data/GV-MAN-X7000-001 Manual.pdf",
+        "timestamp": "2026-10-22T16:18:32.293046+00:00",
+        "chunk_index": 1
+      }
+    },
+    "citation_validation": {
+      "valid_citations": [
+        "S1",
+        "S3",
+        "S6",
+        "S7"
+      ],
+      "invalid_citations": [],
+      "citation_validation_passed": true
+    }
+  }
+]

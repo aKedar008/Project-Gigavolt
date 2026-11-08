@@ -1,0 +1,34 @@
+{
+  "generated_at": "2026-11-04T19:56:55.014403Z",
+  "runs_per_query": 5,
+  "total_runs": 15,
+  "successful_runs": 15,
+  "citation_pass_rate": 1.0,
+  "retrieval_latency": {
+    "count": 15,
+    "min_ms": 21.54,
+    "max_ms": 516.54,
+    "mean_ms": 98.59,
+    "p50_ms": 42.94,
+    "p95_ms": 414.54,
+    "p99_ms": 496.14
+  },
+  "llm_latency": {
+    "count": 15,
+    "min_ms": 3293.37,
+    "max_ms": 5207.68,
+    "mean_ms": 4267.23,
+    "p50_ms": 4173.08,
+    "p95_ms": 5170.31,
+    "p99_ms": 5200.21
+  },
+  "end_to_end_latency": {
+    "count": 15,
+    "min_ms": 3333.37,
+    "max_ms": 5231.5,
+    "mean_ms": 4365.94,
+    "p50_ms": 4283.18,
+    "p95_ms": 5207.59,
+    "p99_ms": 5226.72
+  }
+}
