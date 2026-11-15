@@ -1,0 +1,6 @@
+chromadb
+sentence-transformers
+pymongo
+mysql-connector-python
+python-dotenv
+openai

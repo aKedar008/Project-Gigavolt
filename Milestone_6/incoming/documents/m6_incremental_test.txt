@@ -1,0 +1,4 @@
+Gigavolt Incremental Maintenance Bulletin
+
+Inspect inverter cooling airflow and electrical connections during scheduled X-7000 maintenance.
+Also inspect battery temperature before returning the system to service.

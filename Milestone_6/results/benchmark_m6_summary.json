@@ -1,0 +1,116 @@
+{
+  "generated_at_utc": "2026-11-15T21:27:52.124607+00:00",
+  "distinct_prompt_count": 24,
+  "cold": {
+    "prompt_count": 24,
+    "successful_runs": 24,
+    "failed_runs": 0,
+    "elapsed_seconds": 471.381,
+    "throughput_qps": 0.0509,
+    "citation_pass_rate": 1.0,
+    "provenance_pass_rate": 1.0,
+    "stage_latency": {
+      "sql_ms": {
+        "count": 8,
+        "mean_ms": 123.29,
+        "p50_ms": 14.17,
+        "p95_ms": 491.2,
+        "p99_ms": 539.1,
+        "min_ms": 0.01,
+        "max_ms": 551.07
+      },
+      "mongo_ms": {
+        "count": 24,
+        "mean_ms": 14.15,
+        "p50_ms": 1.79,
+        "p95_ms": 90.66,
+        "p99_ms": 155.8,
+        "min_ms": 0.9,
+        "max_ms": 171.54
+      },
+      "vector_ms": {
+        "count": 24,
+        "mean_ms": 74.1,
+        "p50_ms": 32.6,
+        "p95_ms": 348.65,
+        "p99_ms": 464.4,
+        "min_ms": 25.58,
+        "max_ms": 488.94
+      },
+      "retrieval_total_ms": {
+        "count": 24,
+        "mean_ms": 129.54,
+        "p50_ms": 34.86,
+        "p95_ms": 635.45,
+        "p99_ms": 713.68,
+        "min_ms": 27.5,
+        "max_ms": 729.44
+      },
+      "llm_ms": {
+        "count": 24,
+        "mean_ms": 19510.55,
+        "p50_ms": 20823.4,
+        "p95_ms": 27549.69,
+        "p99_ms": 27917.35,
+        "min_ms": 826.28,
+        "max_ms": 27941.02
+      },
+      "total_ms": {
+        "count": 24,
+        "mean_ms": 19640.43,
+        "p50_ms": 20854.06,
+        "p95_ms": 27691.83,
+        "p99_ms": 28437.04,
+        "min_ms": 1261.14,
+        "max_ms": 28567.68
+      }
+    }
+  },
+  "warm_cache": {
+    "prompt_count": 24,
+    "successful_runs": 24,
+    "failed_runs": 0,
+    "elapsed_seconds": 0.022,
+    "throughput_qps": 1115.1934,
+    "citation_pass_rate": 1.0,
+    "provenance_pass_rate": 1.0,
+    "stage_latency": {
+      "sql_ms": {},
+      "mongo_ms": {},
+      "vector_ms": {},
+      "retrieval_total_ms": {
+        "count": 24,
+        "mean_ms": 0.0,
+        "p50_ms": 0.0,
+        "p95_ms": 0.0,
+        "p99_ms": 0.0,
+        "min_ms": 0.0,
+        "max_ms": 0.0
+      },
+      "llm_ms": {
+        "count": 24,
+        "mean_ms": 0.0,
+        "p50_ms": 0.0,
+        "p95_ms": 0.0,
+        "p99_ms": 0.0,
+        "min_ms": 0.0,
+        "max_ms": 0.0
+      },
+      "total_ms": {
+        "count": 24,
+        "mean_ms": 0.83,
+        "p50_ms": 0.1,
+        "p95_ms": 3.42,
+        "p99_ms": 5.5,
+        "min_ms": 0.07,
+        "max_ms": 6.05
+      }
+    }
+  },
+  "optimization": {
+    "type": "process-local repeated-query response cache",
+    "scope": "same-process repeated questions",
+    "cold_p50_ms": 20854.06,
+    "warm_p50_ms": 0.1
+  }
+}

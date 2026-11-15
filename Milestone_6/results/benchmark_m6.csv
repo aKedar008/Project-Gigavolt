@@ -1,0 +1,389 @@
+question_id,mode,question,cache_hit,sources_used,retrieval_total_ms,llm_ms,total_ms,citation_passed,provenance_pass,answer,error
+1,cold,"What are common failure modes for X-7000 batteries in high-temperature environments, and what maintenance actions are recommended?",False,"mongo,vector",660.94,1328.33,1990.32,True,True,"Common failure modes in high‑temperature operation are:
+
+- **DC over‑current trips** (ERR_INV_404) and **fuse blowouts** (ERR_FUSE_001). Telemetry shows both faults occurring at 62 °C and 85 °C, respectively, with high current spikes and high SOC values [S1][S2].
+- **Thermal stress on inverter cooling loops** and **cell‑temperature spikes** can precipitate these events. Documentation notes that high‑temperature environments increase thermal stress on the battery systems and recommend inspecting cooling airflow, temperature, and connections [S4][S5].
+- The LFP chemistry is robust, but improper thermal management can trigger thermal runaway. The manual lists rapid ΔT > 2.5 °C/min as a warning and calls for automated isolation and BMS‑controlled shutdowns [S6].
+
+Recommended maintenance actions:
+
+1. **Inspect and clean dual‑loop active liquid glycol‑water cooling** for airflow and flow rate; verify temperature sensors and coolant levels.  
+2. **Check electrical connections** on inverter, thyristor pack, and semiconductor fuses for looseness or corrosion.  
+3. **Verify BMS fault logs** for ERR_INV_404 and ERR_FUSE_001 and replace any blown fuses or faulty thyristor components.  
+4. **Perform scheduled temperature profiling** before returning the system to service, ensuring no rapid",
+2,cold,Show me the service history for equipment SN-4829 and explain any related warranty claims using the available evidence.,False,"mongo,sql,vector",434.73,826.28,1261.14,True,True,"**Service history for SN‑4829 (PowerStation G‑3500)**  
+- **Preventive Maintenance** – Service record SVC‑4829‑001 was logged on 2026‑08‑15 10:30:00. The technician performed a routine inspection of the battery enclosure, cooling system, and electrical connections. No problem code was recorded and the resolution was “Routine inspection completed” [S1].
+
+**Warranty claims**  
+- A warranty claim CLM‑4829‑001 was filed the day after the service (2026‑08‑16). The claim was classified as a “Preventive Service Review,” was closed with an amount of $450.00, and no failure code was reported. The warranty status for the unit remains active until 2027‑12‑31 [S1].
+
+No additional warranty‑related incidents or claims are documented for this serial number in the available evidence.",
+3,cold,"What maintenance actions are recommended after an X-7000 inverter fault, and what evidence supports those actions?",False,"mongo,vector",27.5,2721.23,2748.85,True,True,"- **Inspect inverter cooling airflow and electrical connections** – The Incremental Maintenance Bulletin and the X‑7000 Battery Maintenance Note recommend examining cooling airflow, battery temperature, and all electrical connections after a fault [S4][S5].  
+- **Check the thyristor pack** – Telemetry from SN‑X7‑0099 shows a DC overcurrent trip (ERR_INV_404) and notes “Inspect thyristor pack” [S1][S3].  
+- **Replace blown DC string fuses** – When the fault code is ERR_FUSE_001, the telemetry notes “Replace semiconductor fuse” [S2].  
+- **Apply the snubber upgrade retrofit** – Field logs and the Engineering Change Order indicate that units reporting ERR_INV_404 under high temperature should receive the RET‑X7‑019 retrofit kit, which replaces the old RC snubber with a MOV‑based module and updates firmware to v2.4.11‑b [S7].  
+
+These steps are directly supported by the cited telemetry events and the maintenance/engineering documents.",
+4,cold,Compare observed X-7000 high-temperature telemetry with the technical documentation's recommended response.,False,"mongo,vector",36.46,18795.02,18831.58,True,True,"The telemetry shows two high‑temperature events:
+
+* **SN‑X7‑0099**: 62 °C (high‑current over‑trip) – FAULT status, ERR_INV_404 [S1][S3].
+* **SN‑X7‑0150**: 85 °C (critical fuse blow) – CRITICAL_FAULT status, ERR_FUSE_001 [S2].
+
+The technical documents prescribe the following high‑temperature response:
+
+1. **Maintenance notes (m6_test_doc.txt & m6_incremental_test.txt)** emphasize inspecting cooling airflow, battery temperature, inverter fault codes, and electrical connections during maintenance [S4][S5].
+2. **SOP BESS Emergency Response (GV‑SOP‑SAFETY‑900)** defines a 2‑stage escalation: Stage 1 for ΔT > 2 °C/min; Stage 2 for Temp > 75 °C, where the procedure calls for automatic DC contactor drop and external cooling if required [S6].
+
+Thus, the 85 °C telemetry exceeds the SOP Stage 2 threshold, warranting an automatic isolation and a review of cooling airflow,",
+5,cold,"For SN-4829, combine equipment, service, warranty, telemetry, and technical-document evidence into a concise diagnostic summary.",False,"mongo,sql,vector",58.56,27941.02,27999.7,True,True,"**Diagnostic Summary – SN‑4829 (PowerStation G‑3500)**  
+- **Equipment & Warranty:** SN‑4829 is a PowerStation G‑3500 with an active warranty expiring 2027‑12‑31. A preventive service review (SVC‑4829‑001) was performed on 2026‑08‑15, with no problems logged and the warranty claim CLM‑4829‑001 closed with a $450.00 charge for the inspection[S1].  
+- **Telemetry:** Over the last four days the unit has remained in STANDBY, showing no fault codes, stable temperature (31 °C), voltage (800 V), zero current, and SOC 95 %[S4‑S6]. No abnormal telemetry (ΔT, high temp, or error codes) has been recorded.  
+- **Service & Technical Docs:** The SOP for field warranty claims (GV‑SOP‑WAR‑101) lists ERR_BMS_701 and ERR_BMS_708 as qualifying faults; none are present in the telemetry. The G‑3500 manual (GV‑MAN‑G3500‑002) lists common thermal and isolation faults (ERR_HVAC_302, ERR_ISO_109) that are absent here. The BESS emergency SOP (GV‑SOP‑SAFETY‑900",
+6,cold,What does the available evidence say about thermal stress on X-7000 batteries and the inspections technicians should perform?,False,"mongo,vector",115.79,19846.59,19962.5,True,True,"Thermal stress on X‑7000 units is evident when recorded temperatures exceed normal operating ranges. Telemetry shows two fault events: SN‑X7‑0099 reached 62 °C and triggered a DC over‑current trip [S1], while SN‑X7‑0150 hit 85 °C and caused a fuse blow [S2]. These values are above the typical 36 °C baseline reported for an operational unit [S3], indicating elevated thermal load.
+
+Inspection requirements are specified in the maintenance documents:
+
+- Inspect cooling airflow (dual‑loop liquid glycol‑water) and verify that coolant flow meets the 42 L/min requirement and that there is no pressure drop over a 60‑min hold [S4][S5].
+- Measure battery temperature before returning the system to service to ensure it is within the acceptable range [S4][S5].
+- Check inverter fault codes, electrical connections, and all DC bus insulation and busbar fasteners for integrity [S4][S7].
+- Verify that the BMS has not registered high‑delta cell voltage or other early warning indicators of thermal runaway (ΔT > 2.5 °C/min, terminal voltage < 2.10 V, or outgassing) before re‑energizing [S6].
+
+These steps help prevent further thermal stress and mitigate",
+7,cold,"What corrective action is recommended for an under-voltage cutoff, and what technical source supports it?",False,"mongo,vector",30.58,20651.82,20682.51,True,True,"The recommended corrective action for an under‑voltage cutoff is to perform a controlled grid‑tie depletion, bringing the average cell voltage down to the specified lower cutoff before de‑energizing the system. For LFP modules (e.g., X‑7000), this cutoff is 2.50 V per cell [S5]. This procedure ensures the pack is safely discharged to zero potential before any further disassembly or maintenance is undertaken.",
+8,cold,What should a technician do after a DC string fuse fault before restoring the breaker?,False,"mongo,vector",32.9,24861.94,24894.95,True,True,"After a DC‑string fuse fault (ERR_FUSE_001) the technician must:
+
+- Replace the blown semiconductor fuse with the specified part FUS‑FAST‑600A.  
+- Inspect the DC bus polarity and verify correct wiring before restoring the breaker.  
+
+These steps ensure the fault is cleared and the system is safely re‑energized. [S5]",
+9,cold,Summarize preventive maintenance guidance that is relevant to Gigavolt battery and inverter systems.,False,"mongo,vector",34.01,15948.06,15982.17,True,True,"Preventive maintenance for Gigavolt battery and inverter systems should include the following routine checks:
+
+- **Inverter cooling and airflow** – Inspect forced‑air HVAC ducts and micro‑channel chillers for obstructions, verify fan operation and air‑flow rates before each scheduled service cycle.  [S4][S5]  
+- **Electrical connections** – Tighten all bus‑bar, inverter‑module, and battery‑rack connectors; check continuity and resistance per the inverter fault‑code list.  [S5]  
+- **Battery temperature monitoring** – Record cell and module temperatures during idle periods; any sustained rise above nominal indicates thermal‑stress risk.  [S5]  
+- **Coolant system health** – Confirm coolant pump operation, filter status, and pressure; replace FLT‑AIR‑12 or FLT‑GLY‑701 filters at least quarterly to satisfy warranty coverage.  [S6]  
+- **Cell‑level integrity checks** – Inspect for swelling (>1.5 mm) or structural deformation; isolate affected modules and log incidents.  [S7]  
+
+These activities reduce the likelihood of faults such as ERR_COOL_302 (coolant failure) and ERR_INV_404 (inverter commutation/surge) that can trigger warranty claims.",
+10,cold,"What evidence is available for diagnosing an inverter-related failure, and which evidence comes from telemetry versus documentation?",False,"mongo,vector",28.12,20994.99,21025.62,True,True,"Evidence for diagnosing an inverter‑related failure comes from both telemetry and engineering documentation.
+
+**Telemetry observations**  
+- SN‑X7‑0099 recorded a *FAULT* status with code ERR_INV_404 (DC overcurrent trip) on 2026‑09‑18 13:00:00, showing high temperature, voltage, and current values and a note to inspect the thyristor pack[S2].  
+- SN‑X7‑0150’s log (2026‑11‑12 20:00:00) shows status TEST with fault code M6_TEST, a generic test condition but still telemetry data[S1].  
+- The incident report for SN‑X7‑0094 logs telemetry events leading to ERR_INV_404 and a pre‑charge fault (ERR_PRE_003) during a ramp, including current surge and arc flash details[S5].
+
+**Engineering documentation**  
+- The incremental maintenance bulletin advises inspecting inverter cooling airflow and electrical connections during X‑7000 maintenance[S4].  
+- The field incident report includes teardown findings and corrective actions for pre‑charge resistor and contactor failures, and firmware update requirements[S5].  
+- The manual provides diagnostic steps for isolating inverter faults (e.g., measuring insulation resistance, inspecting IGBT snubber capacitors) and replacement procedures for the inverter gate‑drive board[S6",
+11,cold,"Explain how high temperature, battery state, and fault codes should be interpreted together without claiming causation.",False,"mongo,sql,vector",491.01,24763.92,25255.76,True,True,"Telemetry logs show that high temperature is often recorded near fault codes that involve thermal or cooling issues. For example, the Megapack X‑7000 logged a 62 °C temperature when fault **ERR_INV_404** (DC Overcurrent Trip) was triggered, and the C‑1200 recorded 56.5 °C with fault **ERR_COOL_302** (Low Coolant Flow Rate) [S1][S2]. The manuals confirm that these codes are associated with thermal root causes: **ERR_INV_404** is linked to inverter commutation failure and **ERR_COOL_302** to coolant pump or flow obstruction [S6].  
+
+The state of charge (SOC) can contextualize the severity; a high SOC (≈82 %) in the Megapack suggests a higher energy throughput, which may exacerbate heat generation, whereas a moderate SOC (≈45 %) in the C‑1200 coincides with a coolant flow issue that could be less load‑dependent.  
+
+When interpreting together, technicians should treat the temperature reading as supporting evidence for the fault’s root cause but not as proof of causation. The manuals require that, upon encountering a high‑temperature fault, a controlled shutdown and a specific corrective action (e.g., inspect thyristor pack for **ERR_INV_404** or purge air bubbles for **ERR_COOL_302**)",
+12,cold,"What warranty and service information is available for SN-4829, and what cannot be concluded from the evidence?",False,"mongo,sql,vector",729.44,27838.1,28567.68,True,True,"**Warranty & Service status for SN‑4829**  
+- SN‑4829 is a PowerStation G‑3500.  
+- Warranty is **ACTIVE** and expires **31 Dec 2027** [S1].  
+- A service record **SVC‑4829‑001** was logged on **15 Aug 2026** (10:30) as a **Preventive Maintenance** event, with no problem code and routine inspection of battery enclosure, cooling system, and electrical connections [S1].  
+- A related warranty claim **CLM‑4829‑001** (Preventive Service Review) was filed 16 Aug 2026, closed, with a closed status and $450.00 claim amount; no failure code was recorded [S1].
+
+**What cannot be concluded**  
+- The evidence does not indicate any future or past defects, failure events, or non‑routine maintenance beyond the August 2026 preventive service.  
+- No information is provided about parts replacement, field repairs, or any service beyond the documented preventive inspection.  
+- Telemetry logs (S2‑S4) show normal standby operation; they do not prove any warranty‑relevant fault or degradation.  
+
+Thus, only the",
+13,cold,What field warranty claim information should be documented when a failure leads to technician dispatch?,False,"mongo,sql,vector",40.24,24889.64,24929.98,True,True,"Field warranty claims must capture the following documented items when a technician is dispatched:
+
+1. **Equipment Identification & Failure Context**  
+   - Serial number of the unit and the customer ID linked in the ticket.  
+   - Failure type and qualifying fault code(s) that triggered the dispatch (e.g., ERR_INV_404, ERR_COOL_302) as defined in the Warranty Eligibility Verification Matrix.  
+   - Coverage status (e.g., covered 100 % parts & labor, voided, or ECO‑2024‑019) and any required customer action or liability.  [S4]
+
+2. **Telemetry Evidence**  
+   - Trailing 48 h of telemetry logs with pre‑trip alerts, peak cell temperatures, and bus‑voltage anomalies.  
+   - Specific telemetry entries proving the fault event (e.g., ERR_INV_404, ERR_PRE_003) and the associated severity, temperature, voltage, current, and SOC at the time of fault.  [S4]
+
+3. **Parts & Safety Preparation**  
+   - List of pre‑allocated replacement parts (e.g., FLT‑GLY‑701, PCB‑DRV‑3500, FUS‑FAST‑600A) referenced",
+14,cold,What technical evidence describes safe recovery or restart actions after an electrical fault?,False,"mongo,vector",31.75,25915.38,25947.23,False,False,"**Safe recovery / restart actions after an electrical fault**
+
+1. **Automatic trip and isolation** – A fault such as ERR_INV_404 (DC over‑current) triggers the inverter’s over‑current protection, and the high‑speed protection circuit immediately isolates the unit from the upstream substation (S4).  
+2. **Controlled shutdown** – For high‑severity faults, the manual “Initiate controlled shutdown” procedure is required. After a fault (e.g., ERR_BMS_701 or ERR_INV_404) the system must be brought to a safe state before any power is re‑applied (S7).  
+3. **Component inspection and replacement** – Post‑fault, inspect the specified parts (e.g., INV‑SCR‑9901 thyristor pack, pre‑charge resistor RES‑PR‑50) and replace any failed component per the corrective action table (S7, S4).  
+4. **Verification before restart** – Confirm that all telemetry parameters (voltage, current, temperature) have returned to normal ranges and that fault logs have cleared. Only after these checks can the unit be re‑energized and power export resumed.  
+
+These procedures are derived from the fault‑handling firmware updates, field inspection mandates, and manual",
+15,cold,What X-7000 maintenance guidance is most relevant after an overheating or thermal event?,False,"mongo,vector",37.66,17920.95,17959.97,False,False,"**Post‑thermal‑event maintenance steps for a Gigavolt X‑7000**
+
+1. **Inspect cooling system and airflow** – The X‑7000 Maintenance Note (S4) and Incremental Maintenance Bulletin (S5) both recommend checking inverter cooling airflow and confirming that coolant flow is unobstructed.  
+2. **Verify battery temperature and thermal status** – S4 and S7 advise inspecting battery temperature prior to returning the unit to service, and S7’s fault‑code tree for ERR_BMS_705 details the procedure for addressing cell over‑temperature.  
+3. **Check inverter fault logs and electrical connections** – S7 lists ERR_INV_404 (DC Overcurrent Trip) as a corrective action of inspecting the thyristor pack and output fuses, while S4 notes inspection of inverter fault codes and electrical connections.  
+4. **Replace damaged components if required** – Telemetry S1 shows a thyristor‑pack fault (ERR_INV_404), and S2 shows a blown fuse (ERR_FUSE_001); the corrective actions in S7 recommend inspecting or replacing the thy",
+16,cold,"Using the available sources, distinguish operational telemetry observations from engineering maintenance recommendations.",False,"mongo,vector",37.71,21782.2,21820.01,True,True,"**Telemetry observations (operational data):**  
+- Equipment SN‑X7‑0150 recorded status **TEST** on 2026‑11‑12 T20:00:00Z with fault code M6_TEST, no severity or physical metrics [S1].  
+- Equipment SN‑X7‑0099 (Gigavolt Megapack X‑7000) recorded status **FAULT** on 2026‑09‑18 T13:00:00Z with fault code ERR_INV_404, high severity, 62.0 °C, 980 V, 4500 A, 82.5 % SOC; noted “DC Overcurrent Trip” and “Inspect thyristor pack” [S2].  
+- Equipment SN‑C12‑0001 (C‑1200) recorded status **WARNING** on 2026‑09‑18 T12:30:00Z with fault code ERR_COOL_302, moderate severity, 56.5 °C, 480 V, 150 A, 45.0 % SOC; note “Low coolant flow rate” and “Purge air bubbles using service valve SV‑3” [S3].  
+
+**Engineering maintenance recommendations (procedural guidance):**  
+- The *M",
+17,cold,"What evidence supports checking cooling airflow, battery temperature, inverter fault codes, and electrical connections during maintenance?",False,"mongo,vector",35.58,21848.07,21883.75,False,False,"Cooling airflow, battery temperature, inverter fault codes, and electrical connections are verified during scheduled maintenance to pre‑empt common failure modes.  
+- The **Maintenance Bulletin** (S4) explicitly instructs technicians to inspect “inverter cooling airflow and electrical connections” and to “inspect battery temperature before returning the system to service” during X‑7000 maintenance.  
+- The **Warranty SOP** (S5) lists **ERR_COOL_302** (low coolant flow) and **ERR_INV_404** (inverter commutation failure) as qualifying fault codes, requiring “inspection of cooling flow” and “inspection of inverter commutation” as part of the dispatch workflow.  
+- The **X‑7000 Manual** (S6) details that **ERR_COOL_302** causes “Low Coolant Flow Rate” and prescribes inspecting flow sensors and purging air bubbles, while **ERR_INV_404** is a “High Inverter commutation failure” that mandates inspecting the thyristor pack and output fuses.  
+- Telemetry records (S2, S3) show actual instances where high temperature (62 °C) and low coolant flow (56.5 °C) triggered fault codes",
+18,cold,"For SN-X7-0150, combine the available structured equipment record with telemetry and relevant technical maintenance guidance.",False,"mongo,sql,vector",63.47,23892.54,23956.13,True,True,"**Equipment Summary – SN‑X7‑0150 (Gigavolt Megapack X‑7000)**  
+- Warranty: active until 2027‑12‑31.  
+- Service record (synthetic demo) shows corrective maintenance on 2026‑09‑03 for fault **ERR_FUSE_001**: the DC‑string semiconductor fuse was replaced and post‑repair verification completed. Warranty claim CLM‑X7‑0150‑001 was approved for $1,250.00. [S1]  
+
+**Telemetry context**  
+- 2026‑09‑17 & 09‑18: consecutive critical‑fault events with fault code ERR_FUSE_001, 85 °C, 980 V, 8,250 A, SOC 75 % and note “DC String Fuse Blown. Replace semiconductor fuse.” [S4][S3]  
+- 2026‑11‑12: a TEST status log (M6_TEST, no severity) shows no ongoing fault. [S2]  
+
+**Maintenance guidance**  
+- SOP Field Warranty Claims (SOP WAR‑101) lists **ERR_FUSE_001** as a qualifying fault under “DC String Fuse” – coverage includes parts & labor",
+19,cold,What failure evidence is available for X-7000 equipment operating at elevated temperatures?,False,"mongo,sql,vector",28.15,19727.93,19756.19,True,True,"**Failure evidence at elevated temperatures**
+
+- Two telemetry events show X‑7000 units tripping at temperatures above the typical operating envelope.  
+  * SN‑X7‑0150 recorded a *CRITICAL_FAULT* (ERR_FUSE_001) at 85 °C, indicating a DC‑string fuse blow while the unit was at 85 °C [S2].  
+  * SN‑X7‑0099 recorded a *FAULT* (ERR_INV_404) at 62 °C, a DC‑overcurrent trip while the unit was at 62 °C [S1][S3].
+
+- Engineering documentation notes that high‑temperature operation increases thermal stress on the battery system and recommends inspecting cooling airflow, battery temperature, and inverter fault codes during maintenance [S4].
+
+These telemetry observations directly link elevated temperatures to fault conditions in X‑7000 equipment.",
+20,cold,What diagnostic sequence would you recommend for an X-7000 thermal fault using only the retrieved Gigavolt evidence?,False,"mongo,vector",31.92,18762.55,18794.58,True,True,"**Diagnostic sequence for X‑7000 thermal fault (ERR_INV_404)**  
+
+1. **Verify telemetry** – Confirm the fault code and parameters (temperature 62 °C, voltage 980 V, current 4.5 kA) from the recent telemetry record [S1][S3].  
+2. **Inspect inverter hardware** – Check the thyristor pack and related cooling airflow per the maintenance bulletin: “Inspect inverter cooling airflow and electrical connections during scheduled X‑7000 maintenance” [S4].  
+3. **Examine battery temperature** – Verify the battery temperature prior to service, as high‑temperature operation increases thermal stress and is noted in the maintenance note [S5].  
+4. **Review pre‑charge and contactor condition** – Though the fault is overcurrent, pre‑charge resistor and contactor integrity can contribute to overcurrent; inspect RES‑PR‑50 and CON‑MAIN‑800 if the fault recurs, referencing the incident report that linked ERR_INV_404 to contactor flashover [S7].  
+5. **Check firmware** – Ensure the inverter firmware is at least v2.4.11‑b, which includes the pre‑charge abort feature that mitigates",
+21,cold,"What voltage or current related fault guidance appears in the technical documentation, and what corrective actions are described?",False,"mongo,vector",31.46,22748.87,22780.47,True,True,"**Voltage‑ or current‑related fault guidance in the documentation**
+
+- **ERR_INV_404 (DC over‑current trip)** – Root cause: high inverter commutation failure or line‑to‑line bridge breakdown.  
+  - *Corrective action*: Inspect the thyristor pack (Part INV‑SCR‑9901) and output fuses; review AC grid‑synchronization logs.  
+  - *Field‑level*: If the fault is isolated to a battery string, uncouple modules until the isolation resistance exceeds 100 MΩ, then replace the faulty tray (Part MOD‑NMC‑24V)[S4][S7].
+
+- **ERR_COOL_302 (low coolant flow rate)** – While mainly thermal, it also limits current‑draw capability.  
+  - *Corrective action*: Inspect flow sensor (Part SEN‑FL‑022), purge air bubbles using service valve SV‑3, and top off with a 50/50 ethylene‑glycol mix[S7].
+
+- **ERR_HVAC_502 (chiller compressor overload warning)** – Indirectly limits voltage stability.  
+  - *Corrective action*: Clear condenser grilles, inspect refrigerant sight glass for moisture or bubbles[S4].
+
+- **ERR_B",
+22,cold,How should a technician interpret a fault-code record alongside the relevant manual or SOP guidance?,False,"mongo,vector",29.0,24774.32,24803.43,True,True,"**Interpretation workflow**
+
+1. **Extract fault‑code and telemetry context** – Read the fault‑code (e.g., `ERR_INV_404`) and its severity, temperature, voltage, current, SOC, and notes from the telemetry record [S2], [S3], [S1].  
+2. **Match to SOP or warranty matrix** – Search the field‑warranty SOP for the fault‑code. For `ERR_INV_404` the SOP lists it under “Inverter Commutation / Surge” with coverage under ECO‑2024‑019 and an upgrade kit RET‑X7‑019 issued at zero charge to the customer [S4].  
+3. **Verify telemetry proof** – Ensure the telemetry log contains the required proof (e.g., pre‑trip alerts, peak temperatures, bus voltage anomalies). The SOP requires scanning the last 48 h of logs for such evidence [S4].  
+4. **Determine customer action** – If the fault is covered, the technician may dispatch replacement parts and issue the upgrade kit; if it is a customer‑action fault (e.g., deep discharge `ERR_VOLT_102`), the SOP directs a “Rejection / Out of Warranty” and billing for service [S4].  
+5. **Follow safety and safety‑clearance steps** – If the fault severity is Stage 2–4 (e.g",
+23,cold,What evidence is available about warranty handling when a technical failure requires field service?,False,"mongo,sql,vector",27.92,19733.81,19761.83,False,False,"Warranty handling for field‑service technical failures follows the “Field Warranty Claims & Technician Dispatch Protocol” (S4).  
+- A failure ticket is created in the relational database with the customer ID, serial number, and symptom.  
+- Dispatchers attach the most recent 48 h of telemetry logs (bms_telemetry.json) and scan for qualifying fault codes (e.g., ERR_COOL_302, ERR_INV_404, ERR_BMS_701).  
+- The SOP lists coverage status for each fault code, including 100 % parts‑and‑labor coverage for manufacturing defects, covered cooling failures if preventive maintenance records exist, and coverage under ECO‑2024‑019 for inverter commutation faults.  
+- Before dispatch, required replacement parts are pre‑allocated in the Parts_Inventory table and safety clearance must be signed if Stage 2/3 safety events occurred.  
+
+If the fault code is covered, a technician is dispatched, a formal Warranty_Claim is created, and the customer is billed nothing for parts and labor. If the fault is not covered (e.g., user abuse, unmaintained filters), the claim is rejected and the customer is billed for the service. This procedure is strictly followed for any technical failure that necessitates field service.",
+24,cold,"Give a concise multi-source summary of X-7000 failure diagnosis, maintenance response, and provenance.",False,"mongo,vector",34.13,19739.7,19773.93,True,True,"**Fault diagnosis (telemetry)**  
+- SN‑X7‑0099 repeatedly logged fault **ERR_INV_404** (DC over‑current trip) at 2026‑09‑17 13:00 and 2026‑09‑18 13:00 with 62 °C, 980 V, 4 500 A, 82.5 % SOC, indicating a thyristor‑pack issue. [S1][S3]  
+- SN‑X7‑0150 recorded a critical **ERR_FUSE_001** (DC string fuse blown) at 2026‑09‑18 11:30 with 85 °C, 980 V, 8 250 A, 75.0 % SOC, pointing to fuse failure. [S2]
+
+**Maintenance response (engineering docs)**  
+- Incremental Maintenance Bulletin (m6_incremental_test.txt) recommends inspecting inverter cooling airflow, electrical connections, and battery temperature during scheduled X‑7000 service. [S4]  
+- Battery Maintenance Note (m6_test_doc.txt) stresses that high‑temperature operation increases thermal stress; technicians must check cooling airflow, temperature, inverter fault codes, and connections. [S5]  
+- The X‑7000 manual (Unstructured Data/GV‑MAN‑X7000‑001) lists",
+1,warm_cache,"What are common failure modes for X-7000 batteries in high-temperature environments, and what maintenance actions are recommended?",True,"mongo,vector",0.0,0.0,6.051,True,True,"Common failure modes in high‑temperature operation are:
+
+- **DC over‑current trips** (ERR_INV_404) and **fuse blowouts** (ERR_FUSE_001). Telemetry shows both faults occurring at 62 °C and 85 °C, respectively, with high current spikes and high SOC values [S1][S2].
+- **Thermal stress on inverter cooling loops** and **cell‑temperature spikes** can precipitate these events. Documentation notes that high‑temperature environments increase thermal stress on the battery systems and recommend inspecting cooling airflow, temperature, and connections [S4][S5].
+- The LFP chemistry is robust, but improper thermal management can trigger thermal runaway. The manual lists rapid ΔT > 2.5 °C/min as a warning and calls for automated isolation and BMS‑controlled shutdowns [S6].
+
+Recommended maintenance actions:
+
+1. **Inspect and clean dual‑loop active liquid glycol‑water cooling** for airflow and flow rate; verify temperature sensors and coolant levels.  
+2. **Check electrical connections** on inverter, thyristor pack, and semiconductor fuses for looseness or corrosion.  
+3. **Verify BMS fault logs** for ERR_INV_404 and ERR_FUSE_001 and replace any blown fuses or faulty thyristor components.  
+4. **Perform scheduled temperature profiling** before returning the system to service, ensuring no rapid",
+2,warm_cache,Show me the service history for equipment SN-4829 and explain any related warranty claims using the available evidence.,True,"mongo,sql,vector",0.0,0.0,3.6719,True,True,"**Service history for SN‑4829 (PowerStation G‑3500)**  
+- **Preventive Maintenance** – Service record SVC‑4829‑001 was logged on 2026‑08‑15 10:30:00. The technician performed a routine inspection of the battery enclosure, cooling system, and electrical connections. No problem code was recorded and the resolution was “Routine inspection completed” [S1].
+
+**Warranty claims**  
+- A warranty claim CLM‑4829‑001 was filed the day after the service (2026‑08‑16). The claim was classified as a “Preventive Service Review,” was closed with an amount of $450.00, and no failure code was reported. The warranty status for the unit remains active until 2027‑12‑31 [S1].
+
+No additional warranty‑related incidents or claims are documented for this serial number in the available evidence.",
+3,warm_cache,"What maintenance actions are recommended after an X-7000 inverter fault, and what evidence supports those actions?",True,"mongo,vector",0.0,0.0,1.3066,True,True,"- **Inspect inverter cooling airflow and electrical connections** – The Incremental Maintenance Bulletin and the X‑7000 Battery Maintenance Note recommend examining cooling airflow, battery temperature, and all electrical connections after a fault [S4][S5].  
+- **Check the thyristor pack** – Telemetry from SN‑X7‑0099 shows a DC overcurrent trip (ERR_INV_404) and notes “Inspect thyristor pack” [S1][S3].  
+- **Replace blown DC string fuses** – When the fault code is ERR_FUSE_001, the telemetry notes “Replace semiconductor fuse” [S2].  
+- **Apply the snubber upgrade retrofit** – Field logs and the Engineering Change Order indicate that units reporting ERR_INV_404 under high temperature should receive the RET‑X7‑019 retrofit kit, which replaces the old RC snubber with a MOV‑based module and updates firmware to v2.4.11‑b [S7].  
+
+These steps are directly supported by the cited telemetry events and the maintenance/engineering documents.",
+4,warm_cache,Compare observed X-7000 high-temperature telemetry with the technical documentation's recommended response.,True,"mongo,vector",0.0,0.0,1.3344,True,True,"The telemetry shows two high‑temperature events:
+
+* **SN‑X7‑0099**: 62 °C (high‑current over‑trip) – FAULT status, ERR_INV_404 [S1][S3].
+* **SN‑X7‑0150**: 85 °C (critical fuse blow) – CRITICAL_FAULT status, ERR_FUSE_001 [S2].
+
+The technical documents prescribe the following high‑temperature response:
+
+1. **Maintenance notes (m6_test_doc.txt & m6_incremental_test.txt)** emphasize inspecting cooling airflow, battery temperature, inverter fault codes, and electrical connections during maintenance [S4][S5].
+2. **SOP BESS Emergency Response (GV‑SOP‑SAFETY‑900)** defines a 2‑stage escalation: Stage 1 for ΔT > 2 °C/min; Stage 2 for Temp > 75 °C, where the procedure calls for automatic DC contactor drop and external cooling if required [S6].
+
+Thus, the 85 °C telemetry exceeds the SOP Stage 2 threshold, warranting an automatic isolation and a review of cooling airflow,",
+5,warm_cache,"For SN-4829, combine equipment, service, warranty, telemetry, and technical-document evidence into a concise diagnostic summary.",True,"mongo,sql,vector",0.0,0.0,1.9859,True,True,"**Diagnostic Summary – SN‑4829 (PowerStation G‑3500)**  
+- **Equipment & Warranty:** SN‑4829 is a PowerStation G‑3500 with an active warranty expiring 2027‑12‑31. A preventive service review (SVC‑4829‑001) was performed on 2026‑08‑15, with no problems logged and the warranty claim CLM‑4829‑001 closed with a $450.00 charge for the inspection[S1].  
+- **Telemetry:** Over the last four days the unit has remained in STANDBY, showing no fault codes, stable temperature (31 °C), voltage (800 V), zero current, and SOC 95 %[S4‑S6]. No abnormal telemetry (ΔT, high temp, or error codes) has been recorded.  
+- **Service & Technical Docs:** The SOP for field warranty claims (GV‑SOP‑WAR‑101) lists ERR_BMS_701 and ERR_BMS_708 as qualifying faults; none are present in the telemetry. The G‑3500 manual (GV‑MAN‑G3500‑002) lists common thermal and isolation faults (ERR_HVAC_302, ERR_ISO_109) that are absent here. The BESS emergency SOP (GV‑SOP‑SAFETY‑900",
+6,warm_cache,What does the available evidence say about thermal stress on X-7000 batteries and the inspections technicians should perform?,True,"mongo,vector",0.0,0.0,1.3541,True,True,"Thermal stress on X‑7000 units is evident when recorded temperatures exceed normal operating ranges. Telemetry shows two fault events: SN‑X7‑0099 reached 62 °C and triggered a DC over‑current trip [S1], while SN‑X7‑0150 hit 85 °C and caused a fuse blow [S2]. These values are above the typical 36 °C baseline reported for an operational unit [S3], indicating elevated thermal load.
+
+Inspection requirements are specified in the maintenance documents:
+
+- Inspect cooling airflow (dual‑loop liquid glycol‑water) and verify that coolant flow meets the 42 L/min requirement and that there is no pressure drop over a 60‑min hold [S4][S5].
+- Measure battery temperature before returning the system to service to ensure it is within the acceptable range [S4][S5].
+- Check inverter fault codes, electrical connections, and all DC bus insulation and busbar fasteners for integrity [S4][S7].
+- Verify that the BMS has not registered high‑delta cell voltage or other early warning indicators of thermal runaway (ΔT > 2.5 °C/min, terminal voltage < 2.10 V, or outgassing) before re‑energizing [S6].
+
+These steps help prevent further thermal stress and mitigate",
+7,warm_cache,"What corrective action is recommended for an under-voltage cutoff, and what technical source supports it?",True,"mongo,vector",0.0,0.0,0.1014,True,True,"The recommended corrective action for an under‑voltage cutoff is to perform a controlled grid‑tie depletion, bringing the average cell voltage down to the specified lower cutoff before de‑energizing the system. For LFP modules (e.g., X‑7000), this cutoff is 2.50 V per cell [S5]. This procedure ensures the pack is safely discharged to zero potential before any further disassembly or maintenance is undertaken.",
+8,warm_cache,What should a technician do after a DC string fuse fault before restoring the breaker?,True,"mongo,vector",0.0,0.0,0.7026,True,True,"After a DC‑string fuse fault (ERR_FUSE_001) the technician must:
+
+- Replace the blown semiconductor fuse with the specified part FUS‑FAST‑600A.  
+- Inspect the DC bus polarity and verify correct wiring before restoring the breaker.  
+
+These steps ensure the fault is cleared and the system is safely re‑energized. [S5]",
+9,warm_cache,Summarize preventive maintenance guidance that is relevant to Gigavolt battery and inverter systems.,True,"mongo,vector",0.0,0.0,0.7663,True,True,"Preventive maintenance for Gigavolt battery and inverter systems should include the following routine checks:
+
+- **Inverter cooling and airflow** – Inspect forced‑air HVAC ducts and micro‑channel chillers for obstructions, verify fan operation and air‑flow rates before each scheduled service cycle.  [S4][S5]  
+- **Electrical connections** – Tighten all bus‑bar, inverter‑module, and battery‑rack connectors; check continuity and resistance per the inverter fault‑code list.  [S5]  
+- **Battery temperature monitoring** – Record cell and module temperatures during idle periods; any sustained rise above nominal indicates thermal‑stress risk.  [S5]  
+- **Coolant system health** – Confirm coolant pump operation, filter status, and pressure; replace FLT‑AIR‑12 or FLT‑GLY‑701 filters at least quarterly to satisfy warranty coverage.  [S6]  
+- **Cell‑level integrity checks** – Inspect for swelling (>1.5 mm) or structural deformation; isolate affected modules and log incidents.  [S7]  
+
+These activities reduce the likelihood of faults such as ERR_COOL_302 (coolant failure) and ERR_INV_404 (inverter commutation/surge) that can trigger warranty claims.",
+10,warm_cache,"What evidence is available for diagnosing an inverter-related failure, and which evidence comes from telemetry versus documentation?",True,"mongo,vector",0.0,0.0,0.0828,True,True,"Evidence for diagnosing an inverter‑related failure comes from both telemetry and engineering documentation.
+
+**Telemetry observations**  
+- SN‑X7‑0099 recorded a *FAULT* status with code ERR_INV_404 (DC overcurrent trip) on 2026‑09‑18 13:00:00, showing high temperature, voltage, and current values and a note to inspect the thyristor pack[S2].  
+- SN‑X7‑0150’s log (2026‑11‑12 20:00:00) shows status TEST with fault code M6_TEST, a generic test condition but still telemetry data[S1].  
+- The incident report for SN‑X7‑0094 logs telemetry events leading to ERR_INV_404 and a pre‑charge fault (ERR_PRE_003) during a ramp, including current surge and arc flash details[S5].
+
+**Engineering documentation**  
+- The incremental maintenance bulletin advises inspecting inverter cooling airflow and electrical connections during X‑7000 maintenance[S4].  
+- The field incident report includes teardown findings and corrective actions for pre‑charge resistor and contactor failures, and firmware update requirements[S5].  
+- The manual provides diagnostic steps for isolating inverter faults (e.g., measuring insulation resistance, inspecting IGBT snubber capacitors) and replacement procedures for the inverter gate‑drive board[S6",
+11,warm_cache,"Explain how high temperature, battery state, and fault codes should be interpreted together without claiming causation.",True,"mongo,sql,vector",0.0,0.0,0.0765,True,True,"Telemetry logs show that high temperature is often recorded near fault codes that involve thermal or cooling issues. For example, the Megapack X‑7000 logged a 62 °C temperature when fault **ERR_INV_404** (DC Overcurrent Trip) was triggered, and the C‑1200 recorded 56.5 °C with fault **ERR_COOL_302** (Low Coolant Flow Rate) [S1][S2]. The manuals confirm that these codes are associated with thermal root causes: **ERR_INV_404** is linked to inverter commutation failure and **ERR_COOL_302** to coolant pump or flow obstruction [S6].  
+
+The state of charge (SOC) can contextualize the severity; a high SOC (≈82 %) in the Megapack suggests a higher energy throughput, which may exacerbate heat generation, whereas a moderate SOC (≈45 %) in the C‑1200 coincides with a coolant flow issue that could be less load‑dependent.  
+
+When interpreting together, technicians should treat the temperature reading as supporting evidence for the fault’s root cause but not as proof of causation. The manuals require that, upon encountering a high‑temperature fault, a controlled shutdown and a specific corrective action (e.g., inspect thyristor pack for **ERR_INV_404** or purge air bubbles for **ERR_COOL_302**)",
+12,warm_cache,"What warranty and service information is available for SN-4829, and what cannot be concluded from the evidence?",True,"mongo,sql,vector",0.0,0.0,0.0742,True,True,"**Warranty & Service status for SN‑4829**  
+- SN‑4829 is a PowerStation G‑3500.  
+- Warranty is **ACTIVE** and expires **31 Dec 2027** [S1].  
+- A service record **SVC‑4829‑001** was logged on **15 Aug 2026** (10:30) as a **Preventive Maintenance** event, with no problem code and routine inspection of battery enclosure, cooling system, and electrical connections [S1].  
+- A related warranty claim **CLM‑4829‑001** (Preventive Service Review) was filed 16 Aug 2026, closed, with a closed status and $450.00 claim amount; no failure code was recorded [S1].
+
+**What cannot be concluded**  
+- The evidence does not indicate any future or past defects, failure events, or non‑routine maintenance beyond the August 2026 preventive service.  
+- No information is provided about parts replacement, field repairs, or any service beyond the documented preventive inspection.  
+- Telemetry logs (S2‑S4) show normal standby operation; they do not prove any warranty‑relevant fault or degradation.  
+
+Thus, only the",
+13,warm_cache,What field warranty claim information should be documented when a failure leads to technician dispatch?,True,"mongo,sql,vector",0.0,0.0,0.7271,True,True,"Field warranty claims must capture the following documented items when a technician is dispatched:
+
+1. **Equipment Identification & Failure Context**  
+   - Serial number of the unit and the customer ID linked in the ticket.  
+   - Failure type and qualifying fault code(s) that triggered the dispatch (e.g., ERR_INV_404, ERR_COOL_302) as defined in the Warranty Eligibility Verification Matrix.  
+   - Coverage status (e.g., covered 100 % parts & labor, voided, or ECO‑2024‑019) and any required customer action or liability.  [S4]
+
+2. **Telemetry Evidence**  
+   - Trailing 48 h of telemetry logs with pre‑trip alerts, peak cell temperatures, and bus‑voltage anomalies.  
+   - Specific telemetry entries proving the fault event (e.g., ERR_INV_404, ERR_PRE_003) and the associated severity, temperature, voltage, current, and SOC at the time of fault.  [S4]
+
+3. **Parts & Safety Preparation**  
+   - List of pre‑allocated replacement parts (e.g., FLT‑GLY‑701, PCB‑DRV‑3500, FUS‑FAST‑600A) referenced",
+14,warm_cache,What technical evidence describes safe recovery or restart actions after an electrical fault?,True,"mongo,vector",0.0,0.0,0.1174,False,False,"**Safe recovery / restart actions after an electrical fault**
+
+1. **Automatic trip and isolation** – A fault such as ERR_INV_404 (DC over‑current) triggers the inverter’s over‑current protection, and the high‑speed protection circuit immediately isolates the unit from the upstream substation (S4).  
+2. **Controlled shutdown** – For high‑severity faults, the manual “Initiate controlled shutdown” procedure is required. After a fault (e.g., ERR_BMS_701 or ERR_INV_404) the system must be brought to a safe state before any power is re‑applied (S7).  
+3. **Component inspection and replacement** – Post‑fault, inspect the specified parts (e.g., INV‑SCR‑9901 thyristor pack, pre‑charge resistor RES‑PR‑50) and replace any failed component per the corrective action table (S7, S4).  
+4. **Verification before restart** – Confirm that all telemetry parameters (voltage, current, temperature) have returned to normal ranges and that fault logs have cleared. Only after these checks can the unit be re‑energized and power export resumed.  
+
+These procedures are derived from the fault‑handling firmware updates, field inspection mandates, and manual",
+15,warm_cache,What X-7000 maintenance guidance is most relevant after an overheating or thermal event?,True,"mongo,vector",0.0,0.0,0.0904,False,False,"**Post‑thermal‑event maintenance steps for a Gigavolt X‑7000**
+
+1. **Inspect cooling system and airflow** – The X‑7000 Maintenance Note (S4) and Incremental Maintenance Bulletin (S5) both recommend checking inverter cooling airflow and confirming that coolant flow is unobstructed.  
+2. **Verify battery temperature and thermal status** – S4 and S7 advise inspecting battery temperature prior to returning the unit to service, and S7’s fault‑code tree for ERR_BMS_705 details the procedure for addressing cell over‑temperature.  
+3. **Check inverter fault logs and electrical connections** – S7 lists ERR_INV_404 (DC Overcurrent Trip) as a corrective action of inspecting the thyristor pack and output fuses, while S4 notes inspection of inverter fault codes and electrical connections.  
+4. **Replace damaged components if required** – Telemetry S1 shows a thyristor‑pack fault (ERR_INV_404), and S2 shows a blown fuse (ERR_FUSE_001); the corrective actions in S7 recommend inspecting or replacing the thy",
+16,warm_cache,"Using the available sources, distinguish operational telemetry observations from engineering maintenance recommendations.",True,"mongo,vector",0.0,0.0,0.0813,True,True,"**Telemetry observations (operational data):**  
+- Equipment SN‑X7‑0150 recorded status **TEST** on 2026‑11‑12 T20:00:00Z with fault code M6_TEST, no severity or physical metrics [S1].  
+- Equipment SN‑X7‑0099 (Gigavolt Megapack X‑7000) recorded status **FAULT** on 2026‑09‑18 T13:00:00Z with fault code ERR_INV_404, high severity, 62.0 °C, 980 V, 4500 A, 82.5 % SOC; noted “DC Overcurrent Trip” and “Inspect thyristor pack” [S2].  
+- Equipment SN‑C12‑0001 (C‑1200) recorded status **WARNING** on 2026‑09‑18 T12:30:00Z with fault code ERR_COOL_302, moderate severity, 56.5 °C, 480 V, 150 A, 45.0 % SOC; note “Low coolant flow rate” and “Purge air bubbles using service valve SV‑3” [S3].  
+
+**Engineering maintenance recommendations (procedural guidance):**  
+- The *M",
+17,warm_cache,"What evidence supports checking cooling airflow, battery temperature, inverter fault codes, and electrical connections during maintenance?",True,"mongo,vector",0.0,0.0,0.7553,False,False,"Cooling airflow, battery temperature, inverter fault codes, and electrical connections are verified during scheduled maintenance to pre‑empt common failure modes.  
+- The **Maintenance Bulletin** (S4) explicitly instructs technicians to inspect “inverter cooling airflow and electrical connections” and to “inspect battery temperature before returning the system to service” during X‑7000 maintenance.  
+- The **Warranty SOP** (S5) lists **ERR_COOL_302** (low coolant flow) and **ERR_INV_404** (inverter commutation failure) as qualifying fault codes, requiring “inspection of cooling flow” and “inspection of inverter commutation” as part of the dispatch workflow.  
+- The **X‑7000 Manual** (S6) details that **ERR_COOL_302** causes “Low Coolant Flow Rate” and prescribes inspecting flow sensors and purging air bubbles, while **ERR_INV_404** is a “High Inverter commutation failure” that mandates inspecting the thyristor pack and output fuses.  
+- Telemetry records (S2, S3) show actual instances where high temperature (62 °C) and low coolant flow (56.5 °C) triggered fault codes",
+18,warm_cache,"For SN-X7-0150, combine the available structured equipment record with telemetry and relevant technical maintenance guidance.",True,"mongo,sql,vector",0.0,0.0,0.0922,True,True,"**Equipment Summary – SN‑X7‑0150 (Gigavolt Megapack X‑7000)**  
+- Warranty: active until 2027‑12‑31.  
+- Service record (synthetic demo) shows corrective maintenance on 2026‑09‑03 for fault **ERR_FUSE_001**: the DC‑string semiconductor fuse was replaced and post‑repair verification completed. Warranty claim CLM‑X7‑0150‑001 was approved for $1,250.00. [S1]  
+
+**Telemetry context**  
+- 2026‑09‑17 & 09‑18: consecutive critical‑fault events with fault code ERR_FUSE_001, 85 °C, 980 V, 8,250 A, SOC 75 % and note “DC String Fuse Blown. Replace semiconductor fuse.” [S4][S3]  
+- 2026‑11‑12: a TEST status log (M6_TEST, no severity) shows no ongoing fault. [S2]  
+
+**Maintenance guidance**  
+- SOP Field Warranty Claims (SOP WAR‑101) lists **ERR_FUSE_001** as a qualifying fault under “DC String Fuse” – coverage includes parts & labor",
+19,warm_cache,What failure evidence is available for X-7000 equipment operating at elevated temperatures?,True,"mongo,sql,vector",0.0,0.0,0.0996,True,True,"**Failure evidence at elevated temperatures**
+
+- Two telemetry events show X‑7000 units tripping at temperatures above the typical operating envelope.  
+  * SN‑X7‑0150 recorded a *CRITICAL_FAULT* (ERR_FUSE_001) at 85 °C, indicating a DC‑string fuse blow while the unit was at 85 °C [S2].  
+  * SN‑X7‑0099 recorded a *FAULT* (ERR_INV_404) at 62 °C, a DC‑overcurrent trip while the unit was at 62 °C [S1][S3].
+
+- Engineering documentation notes that high‑temperature operation increases thermal stress on the battery system and recommends inspecting cooling airflow, battery temperature, and inverter fault codes during maintenance [S4].
+
+These telemetry observations directly link elevated temperatures to fault conditions in X‑7000 equipment.",
+20,warm_cache,What diagnostic sequence would you recommend for an X-7000 thermal fault using only the retrieved Gigavolt evidence?,True,"mongo,vector",0.0,0.0,0.0861,True,True,"**Diagnostic sequence for X‑7000 thermal fault (ERR_INV_404)**  
+
+1. **Verify telemetry** – Confirm the fault code and parameters (temperature 62 °C, voltage 980 V, current 4.5 kA) from the recent telemetry record [S1][S3].  
+2. **Inspect inverter hardware** – Check the thyristor pack and related cooling airflow per the maintenance bulletin: “Inspect inverter cooling airflow and electrical connections during scheduled X‑7000 maintenance” [S4].  
+3. **Examine battery temperature** – Verify the battery temperature prior to service, as high‑temperature operation increases thermal stress and is noted in the maintenance note [S5].  
+4. **Review pre‑charge and contactor condition** – Though the fault is overcurrent, pre‑charge resistor and contactor integrity can contribute to overcurrent; inspect RES‑PR‑50 and CON‑MAIN‑800 if the fault recurs, referencing the incident report that linked ERR_INV_404 to contactor flashover [S7].  
+5. **Check firmware** – Ensure the inverter firmware is at least v2.4.11‑b, which includes the pre‑charge abort feature that mitigates",
+21,warm_cache,"What voltage or current related fault guidance appears in the technical documentation, and what corrective actions are described?",True,"mongo,vector",0.0,0.0,0.0725,True,True,"**Voltage‑ or current‑related fault guidance in the documentation**
+
+- **ERR_INV_404 (DC over‑current trip)** – Root cause: high inverter commutation failure or line‑to‑line bridge breakdown.  
+  - *Corrective action*: Inspect the thyristor pack (Part INV‑SCR‑9901) and output fuses; review AC grid‑synchronization logs.  
+  - *Field‑level*: If the fault is isolated to a battery string, uncouple modules until the isolation resistance exceeds 100 MΩ, then replace the faulty tray (Part MOD‑NMC‑24V)[S4][S7].
+
+- **ERR_COOL_302 (low coolant flow rate)** – While mainly thermal, it also limits current‑draw capability.  
+  - *Corrective action*: Inspect flow sensor (Part SEN‑FL‑022), purge air bubbles using service valve SV‑3, and top off with a 50/50 ethylene‑glycol mix[S7].
+
+- **ERR_HVAC_502 (chiller compressor overload warning)** – Indirectly limits voltage stability.  
+  - *Corrective action*: Clear condenser grilles, inspect refrigerant sight glass for moisture or bubbles[S4].
+
+- **ERR_B",
+22,warm_cache,How should a technician interpret a fault-code record alongside the relevant manual or SOP guidance?,True,"mongo,vector",0.0,0.0,0.0662,True,True,"**Interpretation workflow**
+
+1. **Extract fault‑code and telemetry context** – Read the fault‑code (e.g., `ERR_INV_404`) and its severity, temperature, voltage, current, SOC, and notes from the telemetry record [S2], [S3], [S1].  
+2. **Match to SOP or warranty matrix** – Search the field‑warranty SOP for the fault‑code. For `ERR_INV_404` the SOP lists it under “Inverter Commutation / Surge” with coverage under ECO‑2024‑019 and an upgrade kit RET‑X7‑019 issued at zero charge to the customer [S4].  
+3. **Verify telemetry proof** – Ensure the telemetry log contains the required proof (e.g., pre‑trip alerts, peak temperatures, bus voltage anomalies). The SOP requires scanning the last 48 h of logs for such evidence [S4].  
+4. **Determine customer action** – If the fault is covered, the technician may dispatch replacement parts and issue the upgrade kit; if it is a customer‑action fault (e.g., deep discharge `ERR_VOLT_102`), the SOP directs a “Rejection / Out of Warranty” and billing for service [S4].  
+5. **Follow safety and safety‑clearance steps** – If the fault severity is Stage 2–4 (e.g",
+23,warm_cache,What evidence is available about warranty handling when a technical failure requires field service?,True,"mongo,sql,vector",0.0,0.0,0.0727,False,False,"Warranty handling for field‑service technical failures follows the “Field Warranty Claims & Technician Dispatch Protocol” (S4).  
+- A failure ticket is created in the relational database with the customer ID, serial number, and symptom.  
+- Dispatchers attach the most recent 48 h of telemetry logs (bms_telemetry.json) and scan for qualifying fault codes (e.g., ERR_COOL_302, ERR_INV_404, ERR_BMS_701).  
+- The SOP lists coverage status for each fault code, including 100 % parts‑and‑labor coverage for manufacturing defects, covered cooling failures if preventive maintenance records exist, and coverage under ECO‑2024‑019 for inverter commutation faults.  
+- Before dispatch, required replacement parts are pre‑allocated in the Parts_Inventory table and safety clearance must be signed if Stage 2/3 safety events occurred.  
+
+If the fault code is covered, a technician is dispatched, a formal Warranty_Claim is created, and the customer is billed nothing for parts and labor. If the fault is not covered (e.g., user abuse, unmaintained filters), the claim is rejected and the customer is billed for the service. This procedure is strictly followed for any technical failure that necessitates field service.",
+24,warm_cache,"Give a concise multi-source summary of X-7000 failure diagnosis, maintenance response, and provenance.",True,"mongo,vector",0.0,0.0,0.0715,True,True,"**Fault diagnosis (telemetry)**  
+- SN‑X7‑0099 repeatedly logged fault **ERR_INV_404** (DC over‑current trip) at 2026‑09‑17 13:00 and 2026‑09‑18 13:00 with 62 °C, 980 V, 4 500 A, 82.5 % SOC, indicating a thyristor‑pack issue. [S1][S3]  
+- SN‑X7‑0150 recorded a critical **ERR_FUSE_001** (DC string fuse blown) at 2026‑09‑18 11:30 with 85 °C, 980 V, 8 250 A, 75.0 % SOC, pointing to fuse failure. [S2]
+
+**Maintenance response (engineering docs)**  
+- Incremental Maintenance Bulletin (m6_incremental_test.txt) recommends inspecting inverter cooling airflow, electrical connections, and battery temperature during scheduled X‑7000 service. [S4]  
+- Battery Maintenance Note (m6_test_doc.txt) stresses that high‑temperature operation increases thermal stress; technicians must check cooling airflow, temperature, inverter fault codes, and connections. [S5]  
+- The X‑7000 manual (Unstructured Data/GV‑MAN‑X7000‑001) lists",

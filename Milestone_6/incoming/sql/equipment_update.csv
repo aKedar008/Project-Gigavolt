@@ -1,0 +1,2 @@
+equipment_id,model,warranty_expiration,warranty_status,telemetry_record_count,metadata_source
+SN-X7-0150,X-7000,2027-12-31,ACTIVE,25,m6_incremental_test

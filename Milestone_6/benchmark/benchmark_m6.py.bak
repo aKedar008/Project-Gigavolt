@@ -1,0 +1,226 @@
+from __future__ import annotations
+import csv
+import json
+import re
+import statistics
+import sys
+import time
+from datetime import datetime, timezone
+from pathlib import Path
+
+ROOT = Path.home() / "gigavolt-milestone6"
+sys.path.insert(0, str(ROOT / "optimization"))
+from cached_rag import CachedGigavoltRAG
+
+QUESTIONS = [
+    "What are common failure modes for X-7000 batteries in high-temperature environments, and what maintenance actions are recommended?",
+    "Show me the service history for equipment SN-4829 and explain any related warranty claims using the available evidence.",
+    "What maintenance actions are recommended after an X-7000 inverter fault, and what evidence supports those actions?",
+    "Compare observed X-7000 high-temperature telemetry with the technical documentation's recommended response.",
+    "For SN-4829, combine equipment, service, warranty, telemetry, and technical-document evidence into a concise diagnostic summary.",
+    "What does the available evidence say about thermal stress on X-7000 batteries and the inspections technicians should perform?",
+    "What corrective action is recommended for an under-voltage cutoff, and what technical source supports it?",
+    "What should a technician do after a DC string fuse fault before restoring the breaker?",
+    "Summarize preventive maintenance guidance that is relevant to Gigavolt battery and inverter systems.",
+    "What evidence is available for diagnosing an inverter-related failure, and which evidence comes from telemetry versus documentation?",
+    "Explain how high temperature, battery state, and fault codes should be interpreted together without claiming causation.",
+    "What warranty and service information is available for SN-4829, and what cannot be concluded from the evidence?",
+    "What field warranty claim information should be documented when a failure leads to technician dispatch?",
+    "What technical evidence describes safe recovery or restart actions after an electrical fault?",
+    "What X-7000 maintenance guidance is most relevant after an overheating or thermal event?",
+    "Using the available sources, distinguish operational telemetry observations from engineering maintenance recommendations.",
+    "What evidence supports checking cooling airflow, battery temperature, inverter fault codes, and electrical connections during maintenance?",
+    "For SN-X7-0150, combine the available structured equipment record with telemetry and relevant technical maintenance guidance.",
+    "What failure evidence is available for X-7000 equipment operating at elevated temperatures?",
+    "What diagnostic sequence would you recommend for an X-7000 thermal fault using only the retrieved Gigavolt evidence?",
+    "What voltage or current related fault guidance appears in the technical documentation, and what corrective actions are described?",
+    "How should a technician interpret a fault-code record alongside the relevant manual or SOP guidance?",
+    "What evidence is available about warranty handling when a technical failure requires field service?",
+    "Give a concise multi-source summary of X-7000 failure diagnosis, maintenance response, and provenance.",
+]
+
+def percentile(values, p):
+    if not values:
+        return None
+    values = sorted(values)
+    position = (len(values) - 1) * p
+    lower = int(position)
+    upper = min(lower + 1, len(values) - 1)
+    weight = position - lower
+    return values[lower] * (1 - weight) + values[upper] * weight
+
+def stats(values):
+    values = [float(x) for x in values if x is not None]
+    if not values:
+        return {}
+    return {
+        "count": len(values),
+        "mean_ms": round(statistics.mean(values), 2),
+        "p50_ms": round(percentile(values, 0.50), 2),
+        "p95_ms": round(percentile(values, 0.95), 2),
+        "p99_ms": round(percentile(values, 0.99), 2),
+        "min_ms": round(min(values), 2),
+        "max_ms": round(max(values), 2),
+    }
+
+def cited_numbers(answer):
+    return {int(x) for x in re.findall(r"\[S(\d+)\]", answer or "")}
+
+def provenance_pass(result):
+    validation = result.get("citation_validation", {})
+    if not validation.get("citation_validation_passed"):
+        return False
+    provenance = result.get("provenance", {})
+    if not provenance:
+        return False
+    for citation_number in cited_numbers(result.get("answer", "")):
+        item = provenance.get(f"S{citation_number}")
+        if not item:
+            return False
+        for required in ("source_type", "source_id", "source_name"):
+            if not item.get(required):
+                return False
+    return True
+
+def run_pass(rag, label):
+    rows = []
+    started = time.perf_counter()
+    for qid, question in enumerate(QUESTIONS, start=1):
+        print(f"\n[{label}] {qid}/{len(QUESTIONS)}")
+        print(question)
+        try:
+            result = rag.answer(question)
+            row = {
+                "question_id": qid,
+                "question": question,
+                "mode": label,
+                "cache_hit": bool(result.get("cache_hit")),
+                "sources_used": result.get("sources_used", []),
+                "retrieval_timings": result.get("retrieval_timings", {}),
+                "retrieval_total_ms": result.get("retrieval_total_ms"),
+                "llm_ms": result.get("llm_ms"),
+                "total_ms": result.get("total_ms"),
+                "answer": result.get("answer"),
+                "provenance": result.get("provenance", {}),
+                "citation_validation": result.get("citation_validation", {}),
+            }
+            row["provenance_pass"] = provenance_pass(result)
+            rows.append(row)
+            print("total_ms=", row["total_ms"], "| citations=", row["citation_validation"].get("citation_validation_passed"), "| provenance=", row["provenance_pass"], "| cache=", row["cache_hit"])
+        except Exception as exc:
+            print("ERROR:", exc)
+            rows.append({"question_id": qid, "question": question, "mode": label, "error": str(exc), "cache_hit": False, "provenance_pass": False})
+    elapsed = time.perf_counter() - started
+    return rows, elapsed
+
+def summarize(rows, elapsed):
+    successful = [row for row in rows if not row.get("error")]
+    stages = {"sql_ms": [], "mongo_ms": [], "vector_ms": [], "retrieval_total_ms": [], "llm_ms": [], "total_ms": []}
+    for row in successful:
+        timings = row.get("retrieval_timings", {})
+        for key in ("sql_ms", "mongo_ms", "vector_ms"):
+            if key in timings:
+                stages[key].append(timings[key])
+        for key in ("retrieval_total_ms", "llm_ms", "total_ms"):
+            if row.get(key) is not None:
+                stages[key].append(row[key])
+    citation_passes = sum(1 for row in successful if row.get("citation_validation", {}).get("citation_validation_passed"))
+    provenance_passes = sum(1 for row in successful if row.get("provenance_pass"))
+    return {
+        "prompt_count": len(rows),
+        "successful_runs": len(successful),
+        "failed_runs": len(rows) - len(successful),
+        "elapsed_seconds": round(elapsed, 3),
+        "throughput_qps": round(len(successful) / elapsed, 4) if elapsed else None,
+        "citation_pass_rate": round(citation_passes / len(successful), 4) if successful else 0,
+        "provenance_pass_rate": round(provenance_passes / len(successful), 4) if successful else 0,
+        "stage_latency": {key: stats(values) for key, values in stages.items()},
+    }
+
+def write_csv(rows, path):
+    fields = ["question_id", "mode", "question", "cache_hit", "sources_used", "retrieval_total_ms", "llm_ms", "total_ms", "citation_passed", "provenance_pass", "answer", "error"]
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fields)
+        writer.writeheader()
+        for row in rows:
+            writer.writerow({
+                "question_id": row.get("question_id"),
+                "mode": row.get("mode"),
+                "question": row.get("question"),
+                "cache_hit": row.get("cache_hit"),
+                "sources_used": ",".join(row.get("sources_used", [])),
+                "retrieval_total_ms": row.get("retrieval_total_ms"),
+                "llm_ms": row.get("llm_ms"),
+                "total_ms": row.get("total_ms"),
+                "citation_passed": row.get("citation_validation", {}).get("citation_validation_passed"),
+                "provenance_pass": row.get("provenance_pass"),
+                "answer": row.get("answer"),
+                "error": row.get("error"),
+            })
+
+def main():
+    results_dir = ROOT / "results"
+    results_dir.mkdir(parents=True, exist_ok=True)
+    print("Initializing Milestone 6 benchmark...")
+    rag = CachedGigavoltRAG(max_entries=100)
+    cold_rows, cold_elapsed = run_pass(rag, "cold")
+    warm_rows, warm_elapsed = run_pass(rag, "warm_cache")
+    cold_summary = summarize(cold_rows, cold_elapsed)
+    warm_summary = summarize(warm_rows, warm_elapsed)
+    summary = {
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "distinct_prompt_count": len(QUESTIONS),
+        "cold": cold_summary,
+        "warm_cache": warm_summary,
+        "optimization": {
+            "type": "process-local repeated-query response cache",
+            "scope": "same-process repeated questions",
+            "cold_p50_ms": cold_summary.get("stage_latency", {}).get("total_ms", {}).get("p50_ms"),
+            "warm_p50_ms": warm_summary.get("stage_latency", {}).get("total_ms", {}).get("p50_ms"),
+        },
+    }
+    detailed = {"summary": summary, "cold_results": cold_rows, "warm_cache_results": warm_rows}
+    (results_dir / "benchmark_m6_summary.json").write_text(json.dumps(summary, indent=2, default=str) + "\n")
+    (results_dir / "benchmark_m6_detailed.json").write_text(json.dumps(detailed, indent=2, default=str) + "\n")
+    write_csv(cold_rows + warm_rows, results_dir / "benchmark_m6.csv")
+    cold_p50 = cold_summary.get("stage_latency", {}).get("total_ms", {}).get("p50_ms")
+    warm_p50 = warm_summary.get("stage_latency", {}).get("total_ms", {}).get("p50_ms")
+    report = f"""# Milestone 6 Benchmark Report
+
+Generated: {summary['generated_at_utc']}
+
+## Workload
+- Distinct complex prompts: {len(QUESTIONS)}
+- Cold runs: {cold_summary['successful_runs']}
+- Warm-cache runs: {warm_summary['successful_runs']}
+
+## Cold Performance
+- Throughput: {cold_summary['throughput_qps']} QPS
+- Citation pass rate: {cold_summary['citation_pass_rate']:.1%}
+- Provenance pass rate: {cold_summary['provenance_pass_rate']:.1%}
+- End-to-end P50: {cold_p50} ms
+- End-to-end P95: {cold_summary.get('stage_latency', {}).get('total_ms', {}).get('p95_ms')} ms
+- End-to-end P99: {cold_summary.get('stage_latency', {}).get('total_ms', {}).get('p99_ms')} ms
+
+## Stage Latency
+```json
+{json.dumps(cold_summary['stage_latency'], indent=2)}
+```
+
+## Cache Optimization
+The optimized pass repeats the same 24 questions using a bounded in-memory response cache.
+This demonstrates caching without adding infrastructure outside the assignment.
+
+- Warm-cache P50: {warm_p50} ms
+- Warm-cache throughput: {warm_summary['throughput_qps']} QPS
+- Warm-cache citation pass rate: {warm_summary['citation_pass_rate']:.1%}
+- Warm-cache provenance pass rate: {warm_summary['provenance_pass_rate']:.1%}
+"""
+    (results_dir / "benchmark_report.md").write_text(report)
+    print("\n" + "=" * 72)
+    print("MILESTONE 6 BENCHMARK SUMMARY")
+    print("=" * 72)
+    print(json.dumps(summary, indent=2))
+
+if __name__ == "__main__":
+    main()

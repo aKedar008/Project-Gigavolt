@@ -1,0 +1,33 @@
+{
+  "files": {
+    "incoming/documents/m6_incremental_test.txt": {
+      "processed_at_utc": "2026-11-12T21:15:25.139431+00:00",
+      "sha256": "19cac6bd67fd4904b2a9dd35612453e5b128f686a2139c4ffc47031a9ab24d3a",
+      "size_bytes": 213,
+      "stage": "chromadb-document",
+      "status": "SUCCESS"
+    },
+    "incoming/documents/m6_test_doc.txt": {
+      "processed_at_utc": "2026-11-12T21:26:29.211715+00:00",
+      "sha256": "c007543a9ae2f54900f58b04c9978be8c4c34204ec180074b3367be2ea9681a9",
+      "size_bytes": 258,
+      "stage": "chromadb-document",
+      "status": "SUCCESS"
+    },
+    "incoming/sql/equipment_update.csv": {
+      "processed_at_utc": "2026-11-12T21:03:27.645524+00:00",
+      "sha256": "73db9bba0d6cf9f42d0917be24584df97a5f1efbfa64ac1e30904706398354b8",
+      "size_bytes": 153,
+      "stage": "mariadb-equipment",
+      "status": "SUCCESS"
+    },
+    "incoming/telemetry/test_event.json": {
+      "processed_at_utc": "2026-11-12T20:12:29.881409+00:00",
+      "sha256": "d128629b3bd5eaff9b83c54a9608ffff6232880c207ee00fc8abf5c699967e21",
+      "size_bytes": 149,
+      "stage": "mongodb-telemetry",
+      "status": "SUCCESS"
+    }
+  },
+  "version": 1
+}

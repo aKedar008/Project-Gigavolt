@@ -1,0 +1,3944 @@
+{
+  "summary": {
+    "generated_at_utc": "2026-11-15T21:27:52.124607+00:00",
+    "distinct_prompt_count": 24,
+    "cold": {
+      "prompt_count": 24,
+      "successful_runs": 24,
+      "failed_runs": 0,
+      "elapsed_seconds": 471.381,
+      "throughput_qps": 0.0509,
+      "citation_pass_rate": 0.8333,
+      "provenance_pass_rate": 0.8333,
+      "stage_latency": {
+        "sql_ms": {
+          "count": 8,
+          "mean_ms": 123.29,
+          "p50_ms": 14.17,
+          "p95_ms": 491.2,
+          "p99_ms": 539.1,
+          "min_ms": 0.01,
+          "max_ms": 551.07
+        },
+        "mongo_ms": {
+          "count": 24,
+          "mean_ms": 14.15,
+          "p50_ms": 1.79,
+          "p95_ms": 90.66,
+          "p99_ms": 155.8,
+          "min_ms": 0.9,
+          "max_ms": 171.54
+        },
+        "vector_ms": {
+          "count": 24,
+          "mean_ms": 74.1,
+          "p50_ms": 32.6,
+          "p95_ms": 348.65,
+          "p99_ms": 464.4,
+          "min_ms": 25.58,
+          "max_ms": 488.94
+        },
+        "retrieval_total_ms": {
+          "count": 24,
+          "mean_ms": 129.54,
+          "p50_ms": 34.86,
+          "p95_ms": 635.45,
+          "p99_ms": 713.68,
+          "min_ms": 27.5,
+          "max_ms": 729.44
+        },
+        "llm_ms": {
+          "count": 24,
+          "mean_ms": 19510.55,
+          "p50_ms": 20823.4,
+          "p95_ms": 27549.69,
+          "p99_ms": 27917.35,
+          "min_ms": 826.28,
+          "max_ms": 27941.02
+        },
+        "total_ms": {
+          "count": 24,
+          "mean_ms": 19640.43,
+          "p50_ms": 20854.06,
+          "p95_ms": 27691.83,
+          "p99_ms": 28437.04,
+          "min_ms": 1261.14,
+          "max_ms": 28567.68
+        }
+      }
+    },
+    "warm_cache": {
+      "prompt_count": 24,
+      "successful_runs": 24,
+      "failed_runs": 0,
+      "elapsed_seconds": 0.022,
+      "throughput_qps": 1115.1934,
+      "citation_pass_rate": 0.8333,
+      "provenance_pass_rate": 0.8333,
+      "stage_latency": {
+        "sql_ms": {},
+        "mongo_ms": {},
+        "vector_ms": {},
+        "retrieval_total_ms": {
+          "count": 24,
+          "mean_ms": 0.0,
+          "p50_ms": 0.0,
+          "p95_ms": 0.0,
+          "p99_ms": 0.0,
+          "min_ms": 0.0,
+          "max_ms": 0.0
+        },
+        "llm_ms": {
+          "count": 24,
+          "mean_ms": 0.0,
+          "p50_ms": 0.0,
+          "p95_ms": 0.0,
+          "p99_ms": 0.0,
+          "min_ms": 0.0,
+          "max_ms": 0.0
+        },
+        "total_ms": {
+          "count": 24,
+          "mean_ms": 0.83,
+          "p50_ms": 0.1,
+          "p95_ms": 3.42,
+          "p99_ms": 5.5,
+          "min_ms": 0.07,
+          "max_ms": 6.05
+        }
+      }
+    },
+    "optimization": {
+      "type": "process-local repeated-query response cache",
+      "scope": "same-process repeated questions",
+      "cold_p50_ms": 20854.06,
+      "warm_p50_ms": 0.1
+    }
+  },
+  "cold_results": [
+    {
+      "question_id": 1,
+      "question": "What are common failure modes for X-7000 batteries in high-temperature environments, and what maintenance actions are recommended?",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "mongo_ms": 171.54,
+        "vector_ms": 488.94
+      },
+      "retrieval_total_ms": 660.94,
+      "llm_ms": 1328.33,
+      "total_ms": 1990.32,
+      "answer": "Common failure modes in high\u2011temperature operation are:\n\n- **DC over\u2011current trips** (ERR_INV_404) and **fuse blowouts** (ERR_FUSE_001). Telemetry shows both faults occurring at 62\u202f\u00b0C and 85\u202f\u00b0C, respectively, with high current spikes and high SOC values [S1][S2].\n- **Thermal stress on inverter cooling loops** and **cell\u2011temperature spikes** can precipitate these events. Documentation notes that high\u2011temperature environments increase thermal stress on the battery systems and recommend inspecting cooling airflow, temperature, and connections [S4][S5].\n- The LFP chemistry is robust, but improper thermal management can trigger thermal runaway. The manual lists rapid \u0394T >\u202f2.5\u202f\u00b0C/min as a warning and calls for automated isolation and BMS\u2011controlled shutdowns [S6].\n\nRecommended maintenance actions:\n\n1. **Inspect and clean dual\u2011loop active liquid glycol\u2011water cooling** for airflow and flow rate; verify temperature sensors and coolant levels.  \n2. **Check electrical connections** on inverter, thyristor pack, and semiconductor fuses for looseness or corrosion.  \n3. **Verify BMS fault logs** for ERR_INV_404 and ERR_FUSE_001 and replace any blown fuses or faulty thyristor components.  \n4. **Perform scheduled temperature profiling** before returning the system to service, ensuring no rapid",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90196",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T11:30:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90190",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-17T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "9e8632e47453e2ca08d905b49086668646d1c3ea",
+          "source_name": "m6_test_doc.txt",
+          "timestamp": "2026-11-12T21:26:28.745174+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "d2b0fb91a7dd686e21751492bf546296f24509af",
+          "source_name": "Unstructured Data/GV-MAN-X7000-001 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.292935+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "42f8733550c8c3f8a9ff8d338eaa512119e5ca5f",
+          "source_name": "Unstructured Data/GV-SOP-DECOM-601 SOP EOL Decomissioning.pdf",
+          "timestamp": "2026-10-22T16:18:32.607355+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S4",
+          "S5",
+          "S6"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 2,
+      "question": "Show me the service history for equipment SN-4829 and explain any related warranty claims using the available evidence.",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "sql",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "sql_ms": 380.02,
+        "mongo_ms": 10.44,
+        "vector_ms": 44.14
+      },
+      "retrieval_total_ms": 434.73,
+      "llm_ms": 826.28,
+      "total_ms": 1261.14,
+      "answer": "**Service history for SN\u20114829 (PowerStation\u202fG\u20113500)**  \n- **Preventive Maintenance** \u2013 Service record SVC\u20114829\u2011001 was logged on\u202f2026\u201108\u201115\u202f10:30:00. The technician performed a routine inspection of the battery enclosure, cooling system, and electrical connections. No problem code was recorded and the resolution was \u201cRoutine inspection completed\u201d\u00a0[S1].\n\n**Warranty claims**  \n- A warranty claim CLM\u20114829\u2011001 was filed the day after the service (2026\u201108\u201116). The claim was classified as a \u201cPreventive Service Review,\u201d was closed with an amount of\u202f$450.00, and no failure code was reported. The warranty status for the unit remains active until\u202f2027\u201112\u201131\u00a0[S1].\n\nNo additional warranty\u2011related incidents or claims are documented for this serial number in the available evidence.",
+      "provenance": {
+        "S1": {
+          "source_type": "sql",
+          "source_id": "SVC-4829-001",
+          "source_name": "gigavolt_m5",
+          "timestamp": null,
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90198",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:15:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90188",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-17T12:15:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90178",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-16T12:15:00.000Z",
+          "chunk_index": null
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "eef2bb7a3dd418d7ee2d35f835653f274c06c0fc",
+          "source_name": "Unstructured Data/GV-INC-2024-119 Field Incident Low Isolation Trip.pdf",
+          "timestamp": "2026-10-22T16:18:31.356208+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+          "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+          "timestamp": "2026-10-22T16:18:31.177967+00:00",
+          "chunk_index": 0
+        },
+        "S8": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 3,
+      "question": "What maintenance actions are recommended after an X-7000 inverter fault, and what evidence supports those actions?",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "mongo_ms": 1.84,
+        "vector_ms": 25.58
+      },
+      "retrieval_total_ms": 27.5,
+      "llm_ms": 2721.23,
+      "total_ms": 2748.85,
+      "answer": "- **Inspect inverter cooling airflow and electrical connections** \u2013 The Incremental Maintenance Bulletin and the X\u20117000 Battery Maintenance Note recommend examining cooling airflow, battery temperature, and all electrical connections after a fault [S4][S5].  \n- **Check the thyristor pack** \u2013 Telemetry from SN\u2011X7\u20110099 shows a DC overcurrent trip (ERR_INV_404) and notes \u201cInspect thyristor pack\u201d [S1][S3].  \n- **Replace blown DC string fuses** \u2013 When the fault code is ERR_FUSE_001, the telemetry notes \u201cReplace semiconductor fuse\u201d [S2].  \n- **Apply the snubber upgrade retrofit** \u2013 Field logs and the Engineering Change Order indicate that units reporting ERR_INV_404 under high temperature should receive the RET\u2011X7\u2011019 retrofit kit, which replaces the old RC snubber with a MOV\u2011based module and updates firmware to v2.4.11\u2011b [S7].  \n\nThese steps are directly supported by the cited telemetry events and the maintenance/engineering documents.",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90196",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T11:30:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90190",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-17T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "9e8632e47453e2ca08d905b49086668646d1c3ea",
+          "source_name": "m6_test_doc.txt",
+          "timestamp": "2026-11-12T21:26:28.745174+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+          "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+          "timestamp": "2026-10-22T16:18:31.177967+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "9e82d0b230857775d848c7836d090069b861dd45",
+          "source_name": "Unstructured Data/GV-ECO-2024-019 Engineering Change Order.pdf",
+          "timestamp": "2026-10-22T16:18:30.705206+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S7"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 4,
+      "question": "Compare observed X-7000 high-temperature telemetry with the technical documentation's recommended response.",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "mongo_ms": 2.1,
+        "vector_ms": 34.29
+      },
+      "retrieval_total_ms": 36.46,
+      "llm_ms": 18795.02,
+      "total_ms": 18831.58,
+      "answer": "The telemetry shows two high\u2011temperature events:\n\n* **SN\u2011X7\u20110099**: 62\u202f\u00b0C (high\u2011current over\u2011trip) \u2013 FAULT status, ERR_INV_404\u202f[S1][S3].\n* **SN\u2011X7\u20110150**: 85\u202f\u00b0C (critical fuse blow) \u2013 CRITICAL_FAULT status, ERR_FUSE_001\u202f[S2].\n\nThe technical documents prescribe the following high\u2011temperature response:\n\n1. **Maintenance notes (m6_test_doc.txt & m6_incremental_test.txt)** emphasize inspecting cooling airflow, battery temperature, inverter fault codes, and electrical connections during maintenance\u202f[S4][S5].\n2. **SOP BESS Emergency Response (GV\u2011SOP\u2011SAFETY\u2011900)** defines a 2\u2011stage escalation: Stage\u202f1 for \u0394T\u202f>\u202f2\u202f\u00b0C/min; Stage\u202f2 for Temp\u202f>\u202f75\u202f\u00b0C, where the procedure calls for automatic DC contactor drop and external cooling if required\u202f[S6].\n\nThus, the 85\u202f\u00b0C telemetry exceeds the SOP Stage\u202f2 threshold, warranting an automatic isolation and a review of cooling airflow,",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90196",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T11:30:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90190",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-17T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "9e8632e47453e2ca08d905b49086668646d1c3ea",
+          "source_name": "m6_test_doc.txt",
+          "timestamp": "2026-11-12T21:26:28.745174+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "8edd9efff658fbdb8161ea26fb2dff0f11bd9a45",
+          "source_name": "Unstructured Data/GV-SOP-SAFETY-900 SOP BESS Emergency Response and Fire Safety.pdf",
+          "timestamp": "2026-10-22T16:18:32.892131+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "eef2bb7a3dd418d7ee2d35f835653f274c06c0fc",
+          "source_name": "Unstructured Data/GV-INC-2024-119 Field Incident Low Isolation Trip.pdf",
+          "timestamp": "2026-10-22T16:18:31.356208+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 5,
+      "question": "For SN-4829, combine equipment, service, warranty, telemetry, and technical-document evidence into a concise diagnostic summary.",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "sql",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "sql_ms": 25.3,
+        "mongo_ms": 0.92,
+        "vector_ms": 32.27
+      },
+      "retrieval_total_ms": 58.56,
+      "llm_ms": 27941.02,
+      "total_ms": 27999.7,
+      "answer": "**Diagnostic Summary \u2013 SN\u20114829 (PowerStation\u202fG\u20113500)**  \n- **Equipment & Warranty:** SN\u20114829 is a PowerStation\u202fG\u20113500 with an active warranty expiring 2027\u201112\u201131. A preventive service review (SVC\u20114829\u2011001) was performed on 2026\u201108\u201115, with no problems logged and the warranty claim CLM\u20114829\u2011001 closed with a $450.00 charge for the inspection[S1].  \n- **Telemetry:** Over the last four days the unit has remained in STANDBY, showing no fault codes, stable temperature (31\u202f\u00b0C), voltage (800\u202fV), zero current, and SOC 95\u202f%[S4\u2011S6]. No abnormal telemetry (\u0394T, high temp, or error codes) has been recorded.  \n- **Service & Technical Docs:** The SOP for field warranty claims (GV\u2011SOP\u2011WAR\u2011101) lists ERR_BMS_701 and ERR_BMS_708 as qualifying faults; none are present in the telemetry. The G\u20113500 manual (GV\u2011MAN\u2011G3500\u2011002) lists common thermal and isolation faults (ERR_HVAC_302, ERR_ISO_109) that are absent here. The BESS emergency SOP (GV\u2011SOP\u2011SAFETY\u2011900",
+      "provenance": {
+        "S1": {
+          "source_type": "sql",
+          "source_id": "SVC-4829-001",
+          "source_name": "gigavolt_m5",
+          "timestamp": null,
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90198",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:15:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90188",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-17T12:15:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90178",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-16T12:15:00.000Z",
+          "chunk_index": null
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "eef2bb7a3dd418d7ee2d35f835653f274c06c0fc",
+          "source_name": "Unstructured Data/GV-INC-2024-119 Field Incident Low Isolation Trip.pdf",
+          "timestamp": "2026-10-22T16:18:31.356208+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "8edd9efff658fbdb8161ea26fb2dff0f11bd9a45",
+          "source_name": "Unstructured Data/GV-SOP-SAFETY-900 SOP BESS Emergency Response and Fire Safety.pdf",
+          "timestamp": "2026-10-22T16:18:32.892131+00:00",
+          "chunk_index": 0
+        },
+        "S8": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 6,
+      "question": "What does the available evidence say about thermal stress on X-7000 batteries and the inspections technicians should perform?",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "mongo_ms": 1.74,
+        "vector_ms": 113.99
+      },
+      "retrieval_total_ms": 115.79,
+      "llm_ms": 19846.59,
+      "total_ms": 19962.5,
+      "answer": "Thermal stress on X\u20117000 units is evident when recorded temperatures exceed normal operating ranges. Telemetry shows two fault events: SN\u2011X7\u20110099 reached 62\u202f\u00b0C and triggered a DC over\u2011current trip [S1], while SN\u2011X7\u20110150 hit 85\u202f\u00b0C and caused a fuse blow [S2]. These values are above the typical 36\u202f\u00b0C baseline reported for an operational unit [S3], indicating elevated thermal load.\n\nInspection requirements are specified in the maintenance documents:\n\n- Inspect cooling airflow (dual\u2011loop liquid glycol\u2011water) and verify that coolant flow meets the 42\u202fL/min requirement and that there is no pressure drop over a 60\u2011min hold [S4][S5].\n- Measure battery temperature before returning the system to service to ensure it is within the acceptable range [S4][S5].\n- Check inverter fault codes, electrical connections, and all DC bus insulation and busbar fasteners for integrity [S4][S7].\n- Verify that the BMS has not registered high\u2011delta cell voltage or other early warning indicators of thermal runaway (\u0394T\u202f>\u202f2.5\u202f\u00b0C/min, terminal voltage <\u202f2.10\u202fV, or outgassing) before re\u2011energizing [S6].\n\nThese steps help prevent further thermal stress and mitigate",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90196",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T11:30:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90192",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T10:15:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "9e8632e47453e2ca08d905b49086668646d1c3ea",
+          "source_name": "m6_test_doc.txt",
+          "timestamp": "2026-11-12T21:26:28.745174+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "d2b0fb91a7dd686e21751492bf546296f24509af",
+          "source_name": "Unstructured Data/GV-MAN-X7000-001 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.292935+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "c333a9f59aad34c998aab95199d89411f3a2d9cf",
+          "source_name": "Unstructured Data/GV-SOP-COMM-201 SOP Megapack X-7000 SAT.pdf",
+          "timestamp": "2026-10-22T16:18:32.509905+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 7,
+      "question": "What corrective action is recommended for an under-voltage cutoff, and what technical source supports it?",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "mongo_ms": 2.33,
+        "vector_ms": 28.19
+      },
+      "retrieval_total_ms": 30.58,
+      "llm_ms": 20651.82,
+      "total_ms": 20682.51,
+      "answer": "The recommended corrective action for an under\u2011voltage cutoff is to perform a controlled grid\u2011tie depletion, bringing the average cell voltage down to the specified lower cutoff before de\u2011energizing the system. For LFP modules (e.g., X\u20117000), this cutoff is 2.50\u202fV per cell\u202f[S5]. This procedure ensures the pack is safely discharged to zero potential before any further disassembly or maintenance is undertaken.",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "17d4794b3565b107059db5d3f15312b12cc0f7ce",
+          "source_name": "Unstructured Data/GV-SOP-COMM-201 SOP Megapack X-7000 SAT.pdf",
+          "timestamp": "2026-10-22T16:18:32.509951+00:00",
+          "chunk_index": 1
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "42f8733550c8c3f8a9ff8d338eaa512119e5ca5f",
+          "source_name": "Unstructured Data/GV-SOP-DECOM-601 SOP EOL Decomissioning.pdf",
+          "timestamp": "2026-10-22T16:18:32.607355+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "9e82d0b230857775d848c7836d090069b861dd45",
+          "source_name": "Unstructured Data/GV-ECO-2024-019 Engineering Change Order.pdf",
+          "timestamp": "2026-10-22T16:18:30.705206+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S5"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 8,
+      "question": "What should a technician do after a DC string fuse fault before restoring the breaker?",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "mongo_ms": 3.83,
+        "vector_ms": 29.0
+      },
+      "retrieval_total_ms": 32.9,
+      "llm_ms": 24861.94,
+      "total_ms": 24894.95,
+      "answer": "After a DC\u2011string fuse fault (ERR_FUSE_001) the technician must:\n\n- Replace the blown semiconductor fuse with the specified part\u202fFUS\u2011FAST\u2011600A.  \n- Inspect the DC bus polarity and verify correct wiring before restoring the breaker.  \n\nThese steps ensure the fault is cleared and the system is safely re\u2011energized. [S5]",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "3ae350afc5d2fcdea33627d6fcdc04a682d3d473",
+          "source_name": "Unstructured Data/GV-MAN-C1200-003 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:31.602545+00:00",
+          "chunk_index": 1
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+          "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+          "timestamp": "2026-10-22T16:18:31.177967+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "69bea7fc90c55dae577be4613b9c6623cce23278",
+          "source_name": "Unstructured Data/GV-MAN-X7000-001 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.293046+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S5"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 9,
+      "question": "Summarize preventive maintenance guidance that is relevant to Gigavolt battery and inverter systems.",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "mongo_ms": 1.62,
+        "vector_ms": 32.3
+      },
+      "retrieval_total_ms": 34.01,
+      "llm_ms": 15948.06,
+      "total_ms": 15982.17,
+      "answer": "Preventive maintenance for Gigavolt battery and inverter systems should include the following routine checks:\n\n- **Inverter cooling and airflow** \u2013 Inspect forced\u2011air HVAC ducts and micro\u2011channel chillers for obstructions, verify fan operation and air\u2011flow rates before each scheduled service cycle. \u202f[S4][S5]  \n- **Electrical connections** \u2013 Tighten all bus\u2011bar, inverter\u2011module, and battery\u2011rack connectors; check continuity and resistance per the inverter fault\u2011code list. \u202f[S5]  \n- **Battery temperature monitoring** \u2013 Record cell and module temperatures during idle periods; any sustained rise above nominal indicates thermal\u2011stress risk. \u202f[S5]  \n- **Coolant system health** \u2013 Confirm coolant pump operation, filter status, and pressure; replace FLT\u2011AIR\u201112 or FLT\u2011GLY\u2011701 filters at least quarterly to satisfy warranty coverage. \u202f[S6]  \n- **Cell\u2011level integrity checks** \u2013 Inspect for swelling (>1.5\u202fmm) or structural deformation; isolate affected modules and log incidents. \u202f[S7]  \n\nThese activities reduce the likelihood of faults such as ERR_COOL_302 (coolant failure) and ERR_INV_404 (inverter commutation/surge) that can trigger warranty claims.",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "9e8632e47453e2ca08d905b49086668646d1c3ea",
+          "source_name": "m6_test_doc.txt",
+          "timestamp": "2026-11-12T21:26:28.745174+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "91ebb08a3131acd0d6b3d4f3ca927215bea2fc26",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081735+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S4",
+          "S5",
+          "S6",
+          "S7"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 10,
+      "question": "What evidence is available for diagnosing an inverter-related failure, and which evidence comes from telemetry versus documentation?",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "mongo_ms": 0.97,
+        "vector_ms": 27.09
+      },
+      "retrieval_total_ms": 28.12,
+      "llm_ms": 20994.99,
+      "total_ms": 21025.62,
+      "answer": "Evidence for diagnosing an inverter\u2011related failure comes from both telemetry and engineering documentation.\n\n**Telemetry observations**  \n- SN\u2011X7\u20110099 recorded a *FAULT* status with code\u202fERR_INV_404 (DC overcurrent trip) on\u202f2026\u201109\u201118\u202f13:00:00, showing high temperature, voltage, and current values and a note to inspect the thyristor pack[S2].  \n- SN\u2011X7\u20110150\u2019s log (2026\u201111\u201112\u202f20:00:00) shows status\u202fTEST with fault code\u202fM6_TEST, a generic test condition but still telemetry data[S1].  \n- The incident report for SN\u2011X7\u20110094 logs telemetry events leading to ERR_INV_404 and a pre\u2011charge fault (ERR_PRE_003) during a ramp, including current surge and arc flash details[S5].\n\n**Engineering documentation**  \n- The incremental maintenance bulletin advises inspecting inverter cooling airflow and electrical connections during X\u20117000 maintenance[S4].  \n- The field incident report includes teardown findings and corrective actions for pre\u2011charge resistor and contactor failures, and firmware update requirements[S5].  \n- The manual provides diagnostic steps for isolating inverter faults (e.g., measuring insulation resistance, inspecting IGBT snubber capacitors) and replacement procedures for the inverter gate\u2011drive board[S6",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+          "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+          "timestamp": "2026-10-22T16:18:31.177967+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "9e82d0b230857775d848c7836d090069b861dd45",
+          "source_name": "Unstructured Data/GV-ECO-2024-019 Engineering Change Order.pdf",
+          "timestamp": "2026-10-22T16:18:30.705206+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S4",
+          "S5"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 11,
+      "question": "Explain how high temperature, battery state, and fault codes should be interpreted together without claiming causation.",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "sql",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "sql_ms": 3.04,
+        "mongo_ms": 103.12,
+        "vector_ms": 382.26
+      },
+      "retrieval_total_ms": 491.01,
+      "llm_ms": 24763.92,
+      "total_ms": 25255.76,
+      "answer": "Telemetry logs show that high temperature is often recorded near fault codes that involve thermal or cooling issues. For example, the Megapack X\u20117000 logged a 62\u202f\u00b0C temperature when fault **ERR_INV_404** (DC Overcurrent Trip) was triggered, and the C\u20111200 recorded 56.5\u202f\u00b0C with fault **ERR_COOL_302** (Low Coolant Flow Rate) [S1][S2]. The manuals confirm that these codes are associated with thermal root causes: **ERR_INV_404** is linked to inverter commutation failure and **ERR_COOL_302** to coolant pump or flow obstruction [S6].  \n\nThe state of charge (SOC) can contextualize the severity; a high SOC (\u224882\u202f%) in the Megapack suggests a higher energy throughput, which may exacerbate heat generation, whereas a moderate SOC (\u224845\u202f%) in the C\u20111200 coincides with a coolant flow issue that could be less load\u2011dependent.  \n\nWhen interpreting together, technicians should treat the temperature reading as supporting evidence for the fault\u2019s root cause but not as proof of causation. The manuals require that, upon encountering a high\u2011temperature fault, a controlled shutdown and a specific corrective action (e.g., inspect thyristor pack for **ERR_INV_404** or purge air bubbles for **ERR_COOL_302**)",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90197",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:00:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "69bea7fc90c55dae577be4613b9c6623cce23278",
+          "source_name": "Unstructured Data/GV-MAN-X7000-001 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.293046+00:00",
+          "chunk_index": 1
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "3ae350afc5d2fcdea33627d6fcdc04a682d3d473",
+          "source_name": "Unstructured Data/GV-MAN-C1200-003 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:31.602545+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S6"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 12,
+      "question": "What warranty and service information is available for SN-4829, and what cannot be concluded from the evidence?",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "sql",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "sql_ms": 551.07,
+        "mongo_ms": 20.07,
+        "vector_ms": 158.19
+      },
+      "retrieval_total_ms": 729.44,
+      "llm_ms": 27838.1,
+      "total_ms": 28567.68,
+      "answer": "**Warranty & Service status for SN\u20114829**  \n- SN\u20114829 is a PowerStation\u202fG\u20113500.  \n- Warranty is **ACTIVE** and expires **31\u202fDec\u202f2027** [S1].  \n- A service record **SVC\u20114829\u2011001** was logged on **15\u202fAug\u202f2026** (10:30) as a **Preventive Maintenance** event, with no problem code and routine inspection of battery enclosure, cooling system, and electrical connections [S1].  \n- A related warranty claim **CLM\u20114829\u2011001** (Preventive Service Review) was filed 16\u202fAug\u202f2026, closed, with a closed status and $450.00 claim amount; no failure code was recorded [S1].\n\n**What cannot be concluded**  \n- The evidence does not indicate any future or past defects, failure events, or non\u2011routine maintenance beyond the August 2026 preventive service.  \n- No information is provided about parts replacement, field repairs, or any service beyond the documented preventive inspection.  \n- Telemetry logs ([S2]\u2011[S4]) show normal standby operation; they do not prove any warranty\u2011relevant fault or degradation.  \n\nThus, only the",
+      "provenance": {
+        "S1": {
+          "source_type": "sql",
+          "source_id": "SVC-4829-001",
+          "source_name": "gigavolt_m5",
+          "timestamp": null,
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90198",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:15:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90188",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-17T12:15:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90178",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-16T12:15:00.000Z",
+          "chunk_index": null
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "eef2bb7a3dd418d7ee2d35f835653f274c06c0fc",
+          "source_name": "Unstructured Data/GV-INC-2024-119 Field Incident Low Isolation Trip.pdf",
+          "timestamp": "2026-10-22T16:18:31.356208+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+          "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+          "timestamp": "2026-10-22T16:18:31.177967+00:00",
+          "chunk_index": 0
+        },
+        "S8": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S4"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 13,
+      "question": "What field warranty claim information should be documented when a failure leads to technician dispatch?",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "sql",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "sql_ms": 0.01,
+        "mongo_ms": 2.24,
+        "vector_ms": 37.9
+      },
+      "retrieval_total_ms": 40.24,
+      "llm_ms": 24889.64,
+      "total_ms": 24929.98,
+      "answer": "Field warranty claims must capture the following documented items when a technician is dispatched:\n\n1. **Equipment Identification & Failure Context**  \n   - Serial number of the unit and the customer ID linked in the ticket.  \n   - Failure type and qualifying fault code(s) that triggered the dispatch (e.g., ERR_INV_404, ERR_COOL_302) as defined in the Warranty Eligibility Verification Matrix.  \n   - Coverage status (e.g., covered 100\u202f% parts & labor, voided, or ECO\u20112024\u2011019) and any required customer action or liability. \u202f[S4]\n\n2. **Telemetry Evidence**  \n   - Trailing 48\u202fh of telemetry logs with pre\u2011trip alerts, peak cell temperatures, and bus\u2011voltage anomalies.  \n   - Specific telemetry entries proving the fault event (e.g., ERR_INV_404, ERR_PRE_003) and the associated severity, temperature, voltage, current, and SOC at the time of fault. \u202f[S4]\n\n3. **Parts & Safety Preparation**  \n   - List of pre\u2011allocated replacement parts (e.g., FLT\u2011GLY\u2011701, PCB\u2011DRV\u20113500, FUS\u2011FAST\u2011600A) referenced",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+          "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+          "timestamp": "2026-10-22T16:18:31.177967+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "3ae350afc5d2fcdea33627d6fcdc04a682d3d473",
+          "source_name": "Unstructured Data/GV-MAN-C1200-003 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:31.602545+00:00",
+          "chunk_index": 1
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S4"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 14,
+      "question": "What technical evidence describes safe recovery or restart actions after an electrical fault?",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "mongo_ms": 0.9,
+        "vector_ms": 30.79
+      },
+      "retrieval_total_ms": 31.75,
+      "llm_ms": 25915.38,
+      "total_ms": 25947.23,
+      "answer": "**Safe recovery / restart actions after an electrical fault**\n\n1. **Automatic trip and isolation** \u2013 A fault such as\u202fERR_INV_404 (DC over\u2011current) triggers the inverter\u2019s over\u2011current protection, and the high\u2011speed protection circuit immediately isolates the unit from the upstream substation [S4].  \n2. **Controlled shutdown** \u2013 For high\u2011severity faults, the manual \u201cInitiate controlled shutdown\u201d procedure is required. After a fault (e.g., ERR_BMS_701 or ERR_INV_404) the system must be brought to a safe state before any power is re\u2011applied [S7].  \n3. **Component inspection and replacement** \u2013 Post\u2011fault, inspect the specified parts (e.g., INV\u2011SCR\u20119901 thyristor pack, pre\u2011charge resistor RES\u2011PR\u201150) and replace any failed component per the corrective action table ([S7][S4]).  \n4. **Verification before restart** \u2013 Confirm that all telemetry parameters (voltage, current, temperature) have returned to normal ranges and that fault logs have cleared. Only after these checks can the unit be re\u2011energized and power export resumed.  \n\nThese procedures are derived from the fault\u2011handling firmware updates, field inspection mandates, and manual",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+          "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+          "timestamp": "2026-10-22T16:18:31.177967+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "3ae350afc5d2fcdea33627d6fcdc04a682d3d473",
+          "source_name": "Unstructured Data/GV-MAN-C1200-003 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:31.602545+00:00",
+          "chunk_index": 1
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "69bea7fc90c55dae577be4613b9c6623cce23278",
+          "source_name": "Unstructured Data/GV-MAN-X7000-001 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.293046+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S4",
+          "S7"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 15,
+      "question": "What X-7000 maintenance guidance is most relevant after an overheating or thermal event?",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "mongo_ms": 1.68,
+        "vector_ms": 35.89
+      },
+      "retrieval_total_ms": 37.66,
+      "llm_ms": 17920.95,
+      "total_ms": 17959.97,
+      "answer": "**Post\u2011thermal\u2011event maintenance steps for a Gigavolt X\u20117000**\n\n1. **Inspect cooling system and airflow** \u2013 The X\u20117000 Maintenance Note [S4] and Incremental Maintenance Bulletin [S5] both recommend checking inverter cooling airflow and confirming that coolant flow is unobstructed.  \n2. **Verify battery temperature and thermal status** \u2013 [S4] and [S7] advise inspecting battery temperature prior to returning the unit to service, and [S7]\u2019s fault\u2011code tree for\u202fERR_BMS_705 details the procedure for addressing cell over\u2011temperature.  \n3. **Check inverter fault logs and electrical connections** \u2013 [S7] lists ERR_INV_404 (DC Overcurrent Trip) as a corrective action of inspecting the thyristor pack and output fuses, while [S4] notes inspection of inverter fault codes and electrical connections.  \n4. **Replace damaged components if required** \u2013 Telemetry [S1] shows a thyristor\u2011pack fault (ERR_INV_404), and [S2] shows a blown fuse (ERR_FUSE_001); the corrective actions in [S7] recommend inspecting or replacing the thy",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90196",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T11:30:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90192",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T10:15:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "9e8632e47453e2ca08d905b49086668646d1c3ea",
+          "source_name": "m6_test_doc.txt",
+          "timestamp": "2026-11-12T21:26:28.745174+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "69bea7fc90c55dae577be4613b9c6623cce23278",
+          "source_name": "Unstructured Data/GV-MAN-X7000-001 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.293046+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S4",
+          "S5",
+          "S7"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 16,
+      "question": "Using the available sources, distinguish operational telemetry observations from engineering maintenance recommendations.",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "mongo_ms": 0.94,
+        "vector_ms": 36.71
+      },
+      "retrieval_total_ms": 37.71,
+      "llm_ms": 21782.2,
+      "total_ms": 21820.01,
+      "answer": "**Telemetry observations (operational data):**  \n- Equipment SN\u2011X7\u20110150 recorded status **TEST** on 2026\u201111\u201112\u202fT20:00:00Z with fault code\u202fM6_TEST, no severity or physical metrics [S1].  \n- Equipment SN\u2011X7\u20110099 (Gigavolt\u202fMegapack\u202fX\u20117000) recorded status **FAULT** on 2026\u201109\u201118\u202fT13:00:00Z with fault code\u202fERR_INV_404, high severity, 62.0\u202f\u00b0C, 980\u202fV, 4500\u202fA, 82.5\u202f% SOC; noted \u201cDC Overcurrent Trip\u201d and \u201cInspect thyristor pack\u201d [S2].  \n- Equipment SN\u2011C12\u20110001 (C\u20111200) recorded status **WARNING** on 2026\u201109\u201118\u202fT12:30:00Z with fault code\u202fERR_COOL_302, moderate severity, 56.5\u202f\u00b0C, 480\u202fV, 150\u202fA, 45.0\u202f% SOC; note \u201cLow coolant flow rate\u201d and \u201cPurge air bubbles using service valve\u202fSV\u20113\u201d [S3].  \n\n**Engineering maintenance recommendations (procedural guidance):**  \n- The *M",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "8edd9efff658fbdb8161ea26fb2dff0f11bd9a45",
+          "source_name": "Unstructured Data/GV-SOP-SAFETY-900 SOP BESS Emergency Response and Fire Safety.pdf",
+          "timestamp": "2026-10-22T16:18:32.892131+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "3ae350afc5d2fcdea33627d6fcdc04a682d3d473",
+          "source_name": "Unstructured Data/GV-MAN-C1200-003 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:31.602545+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 17,
+      "question": "What evidence supports checking cooling airflow, battery temperature, inverter fault codes, and electrical connections during maintenance?",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "mongo_ms": 1.83,
+        "vector_ms": 33.69
+      },
+      "retrieval_total_ms": 35.58,
+      "llm_ms": 21848.07,
+      "total_ms": 21883.75,
+      "answer": "Cooling airflow, battery temperature, inverter fault codes, and electrical connections are verified during scheduled maintenance to pre\u2011empt common failure modes.  \n- The **Maintenance Bulletin** [S4] explicitly instructs technicians to inspect \u201cinverter cooling airflow and electrical connections\u201d and to \u201cinspect battery temperature before returning the system to service\u201d during X\u20117000 maintenance.  \n- The **Warranty SOP** [S5] lists **ERR_COOL_302** (low coolant flow) and **ERR_INV_404** (inverter commutation failure) as qualifying fault codes, requiring \u201cinspection of cooling flow\u201d and \u201cinspection of inverter commutation\u201d as part of the dispatch workflow.  \n- The **X\u20117000 Manual** [S6] details that **ERR_COOL_302** causes \u201cLow Coolant Flow Rate\u201d and prescribes inspecting flow sensors and purging air bubbles, while **ERR_INV_404** is a \u201cHigh Inverter commutation failure\u201d that mandates inspecting the thyristor pack and output fuses.  \n- Telemetry records ([S2][S3]) show actual instances where high temperature (62\u202f\u00b0C) and low coolant flow (56.5\u202f\u00b0C) triggered fault codes",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "69bea7fc90c55dae577be4613b9c6623cce23278",
+          "source_name": "Unstructured Data/GV-MAN-X7000-001 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.293046+00:00",
+          "chunk_index": 1
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 18,
+      "question": "For SN-X7-0150, combine the available structured equipment record with telemetry and relevant technical maintenance guidance.",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "sql",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "sql_ms": 26.82,
+        "mongo_ms": 3.67,
+        "vector_ms": 32.9
+      },
+      "retrieval_total_ms": 63.47,
+      "llm_ms": 23892.54,
+      "total_ms": 23956.13,
+      "answer": "**Equipment Summary \u2013 SN\u2011X7\u20110150 (Gigavolt Megapack\u202fX\u20117000)**  \n- Warranty: active until 2027\u201112\u201131.  \n- Service record (synthetic demo) shows corrective maintenance on 2026\u201109\u201103 for fault **ERR_FUSE_001**: the DC\u2011string semiconductor fuse was replaced and post\u2011repair verification completed. Warranty claim CLM\u2011X7\u20110150\u2011001 was approved for $1,250.00. [S1]  \n\n**Telemetry context**  \n- 2026\u201109\u201117\u202f&\u202f09\u201118: consecutive critical\u2011fault events with fault code\u202fERR_FUSE_001, 85\u202f\u00b0C, 980\u202fV, 8,250\u202fA, SOC\u202f75\u202f% and note \u201cDC String Fuse Blown. Replace semiconductor fuse.\u201d [S4][S3]  \n- 2026\u201111\u201112: a TEST status log (M6_TEST, no severity) shows no ongoing fault. [S2]  \n\n**Maintenance guidance**  \n- SOP Field Warranty Claims (SOP\u202fWAR\u2011101) lists **ERR_FUSE_001** as a qualifying fault under \u201cDC String Fuse\u201d \u2013 coverage includes parts & labor",
+      "provenance": {
+        "S1": {
+          "source_type": "sql",
+          "source_id": "SVC-X7-0150-001",
+          "source_name": "gigavolt_m5",
+          "timestamp": null,
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90196",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T11:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90186",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-17T11:30:00.000Z",
+          "chunk_index": null
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "eef2bb7a3dd418d7ee2d35f835653f274c06c0fc",
+          "source_name": "Unstructured Data/GV-INC-2024-119 Field Incident Low Isolation Trip.pdf",
+          "timestamp": "2026-10-22T16:18:31.356208+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S8": {
+          "source_type": "vector",
+          "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+          "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+          "timestamp": "2026-10-22T16:18:31.177967+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S3",
+          "S4"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 19,
+      "question": "What failure evidence is available for X-7000 equipment operating at elevated temperatures?",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "sql",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "sql_ms": 0.01,
+        "mongo_ms": 2.16,
+        "vector_ms": 25.86
+      },
+      "retrieval_total_ms": 28.15,
+      "llm_ms": 19727.93,
+      "total_ms": 19756.19,
+      "answer": "**Failure evidence at elevated temperatures**\n\n- Two telemetry events show X\u20117000 units tripping at temperatures above the typical operating envelope.  \n  * SN\u2011X7\u20110150 recorded a *CRITICAL_FAULT* (ERR_FUSE_001) at 85\u202f\u00b0C, indicating a DC\u2011string fuse blow while the unit was at 85\u202f\u00b0C\u202f[S2].  \n  * SN\u2011X7\u20110099 recorded a *FAULT* (ERR_INV_404) at 62\u202f\u00b0C, a DC\u2011overcurrent trip while the unit was at 62\u202f\u00b0C\u202f[S1][S3].\n\n- Engineering documentation notes that high\u2011temperature operation increases thermal stress on the battery system and recommends inspecting cooling airflow, battery temperature, and inverter fault codes during maintenance\u202f[S4].\n\nThese telemetry observations directly link elevated temperatures to fault conditions in X\u20117000 equipment.",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90196",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T11:30:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90190",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-17T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "9e8632e47453e2ca08d905b49086668646d1c3ea",
+          "source_name": "m6_test_doc.txt",
+          "timestamp": "2026-11-12T21:26:28.745174+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "eef2bb7a3dd418d7ee2d35f835653f274c06c0fc",
+          "source_name": "Unstructured Data/GV-INC-2024-119 Field Incident Low Isolation Trip.pdf",
+          "timestamp": "2026-10-22T16:18:31.356208+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+          "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+          "timestamp": "2026-10-22T16:18:31.177967+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S3",
+          "S4"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 20,
+      "question": "What diagnostic sequence would you recommend for an X-7000 thermal fault using only the retrieved Gigavolt evidence?",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "mongo_ms": 0.98,
+        "vector_ms": 30.88
+      },
+      "retrieval_total_ms": 31.92,
+      "llm_ms": 18762.55,
+      "total_ms": 18794.58,
+      "answer": "**Diagnostic sequence for X\u20117000 thermal fault (ERR_INV_404)**  \n\n1. **Verify telemetry** \u2013 Confirm the fault code and parameters (temperature\u202f62\u202f\u00b0C, voltage\u202f980\u202fV, current\u202f4.5\u202fkA) from the recent telemetry record [S1][S3].  \n2. **Inspect inverter hardware** \u2013 Check the thyristor pack and related cooling airflow per the maintenance bulletin: \u201cInspect inverter cooling airflow and electrical connections during scheduled X\u20117000 maintenance\u201d [S4].  \n3. **Examine battery temperature** \u2013 Verify the battery temperature prior to service, as high\u2011temperature operation increases thermal stress and is noted in the maintenance note [S5].  \n4. **Review pre\u2011charge and contactor condition** \u2013 Though the fault is overcurrent, pre\u2011charge resistor and contactor integrity can contribute to overcurrent; inspect RES\u2011PR\u201150 and CON\u2011MAIN\u2011800 if the fault recurs, referencing the incident report that linked ERR_INV_404 to contactor flashover [S7].  \n5. **Check firmware** \u2013 Ensure the inverter firmware is at least v2.4.11\u2011b, which includes the pre\u2011charge abort feature that mitigates",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90196",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T11:30:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90190",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-17T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "9e8632e47453e2ca08d905b49086668646d1c3ea",
+          "source_name": "m6_test_doc.txt",
+          "timestamp": "2026-11-12T21:26:28.745174+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "eef2bb7a3dd418d7ee2d35f835653f274c06c0fc",
+          "source_name": "Unstructured Data/GV-INC-2024-119 Field Incident Low Isolation Trip.pdf",
+          "timestamp": "2026-10-22T16:18:31.356208+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+          "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+          "timestamp": "2026-10-22T16:18:31.177967+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S3",
+          "S4",
+          "S5",
+          "S7"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 21,
+      "question": "What voltage or current related fault guidance appears in the technical documentation, and what corrective actions are described?",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "mongo_ms": 1.65,
+        "vector_ms": 29.75
+      },
+      "retrieval_total_ms": 31.46,
+      "llm_ms": 22748.87,
+      "total_ms": 22780.47,
+      "answer": "**Voltage\u2011 or current\u2011related fault guidance in the documentation**\n\n- **ERR_INV_404 (DC over\u2011current trip)** \u2013 Root cause: high inverter commutation failure or line\u2011to\u2011line bridge breakdown.  \n  - *Corrective action*: Inspect the thyristor pack (Part\u202fINV\u2011SCR\u20119901) and output fuses; review AC grid\u2011synchronization logs.  \n  - *Field\u2011level*: If the fault is isolated to a battery string, uncouple modules until the isolation resistance exceeds 100\u202fM\u03a9, then replace the faulty tray (Part\u202fMOD\u2011NMC\u201124V)[S4][S7].\n\n- **ERR_COOL_302 (low coolant flow rate)** \u2013 While mainly thermal, it also limits current\u2011draw capability.  \n  - *Corrective action*: Inspect flow sensor (Part\u202fSEN\u2011FL\u2011022), purge air bubbles using service valve\u202fSV\u20113, and top off with a 50/50 ethylene\u2011glycol mix[S7].\n\n- **ERR_HVAC_502 (chiller compressor overload warning)** \u2013 Indirectly limits voltage stability.  \n  - *Corrective action*: Clear condenser grilles, inspect refrigerant sight glass for moisture or bubbles[S4].\n\n- **ERR_B",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "17d4794b3565b107059db5d3f15312b12cc0f7ce",
+          "source_name": "Unstructured Data/GV-SOP-COMM-201 SOP Megapack X-7000 SAT.pdf",
+          "timestamp": "2026-10-22T16:18:32.509951+00:00",
+          "chunk_index": 1
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "69bea7fc90c55dae577be4613b9c6623cce23278",
+          "source_name": "Unstructured Data/GV-MAN-X7000-001 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.293046+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S4",
+          "S7"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 22,
+      "question": "How should a technician interpret a fault-code record alongside the relevant manual or SOP guidance?",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "mongo_ms": 1.02,
+        "vector_ms": 27.92
+      },
+      "retrieval_total_ms": 29.0,
+      "llm_ms": 24774.32,
+      "total_ms": 24803.43,
+      "answer": "**Interpretation workflow**\n\n1. **Extract fault\u2011code and telemetry context** \u2013 Read the fault\u2011code (e.g., `ERR_INV_404`) and its severity, temperature, voltage, current, SOC, and notes from the telemetry record [S2][S3], [S1].  \n2. **Match to SOP or warranty matrix** \u2013 Search the field\u2011warranty SOP for the fault\u2011code. For `ERR_INV_404` the SOP lists it under \u201cInverter Commutation / Surge\u201d with coverage under ECO\u20112024\u2011019 and an upgrade kit RET\u2011X7\u2011019 issued at zero charge to the customer [S4].  \n3. **Verify telemetry proof** \u2013 Ensure the telemetry log contains the required proof (e.g., pre\u2011trip alerts, peak temperatures, bus voltage anomalies). The SOP requires scanning the last 48\u202fh of logs for such evidence [S4].  \n4. **Determine customer action** \u2013 If the fault is covered, the technician may dispatch replacement parts and issue the upgrade kit; if it is a customer\u2011action fault (e.g., deep discharge `ERR_VOLT_102`), the SOP directs a \u201cRejection / Out of Warranty\u201d and billing for service [S4].  \n5. **Follow safety and safety\u2011clearance steps** \u2013 If the fault severity is Stage\u202f2\u20134 (e.g",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "8edd9efff658fbdb8161ea26fb2dff0f11bd9a45",
+          "source_name": "Unstructured Data/GV-SOP-SAFETY-900 SOP BESS Emergency Response and Fire Safety.pdf",
+          "timestamp": "2026-10-22T16:18:32.892131+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "3ae350afc5d2fcdea33627d6fcdc04a682d3d473",
+          "source_name": "Unstructured Data/GV-MAN-C1200-003 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:31.602545+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S3",
+          "S4"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 23,
+      "question": "What evidence is available about warranty handling when a technical failure requires field service?",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "sql",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "sql_ms": 0.01,
+        "mongo_ms": 0.98,
+        "vector_ms": 26.86
+      },
+      "retrieval_total_ms": 27.92,
+      "llm_ms": 19733.81,
+      "total_ms": 19761.83,
+      "answer": "Warranty handling for field\u2011service technical failures follows the \u201cField Warranty Claims & Technician Dispatch Protocol\u201d [S4].  \n- A failure ticket is created in the relational database with the customer ID, serial number, and symptom.  \n- Dispatchers attach the most recent 48\u202fh of telemetry logs (bms_telemetry.json) and scan for qualifying fault codes (e.g., ERR_COOL_302, ERR_INV_404, ERR_BMS_701).  \n- The SOP lists coverage status for each fault code, including 100\u202f% parts\u2011and\u2011labor coverage for manufacturing defects, covered cooling failures if preventive maintenance records exist, and coverage under ECO\u20112024\u2011019 for inverter commutation faults.  \n- Before dispatch, required replacement parts are pre\u2011allocated in the Parts_Inventory table and safety clearance must be signed if Stage\u202f2/3 safety events occurred.  \n\nIf the fault code is covered, a technician is dispatched, a formal Warranty_Claim is created, and the customer is billed nothing for parts and labor. If the fault is not covered (e.g., user abuse, unmaintained filters), the claim is rejected and the customer is billed for the service. This procedure is strictly followed for any technical failure that necessitates field service.",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "0a28d1157367b9a1993dffad54805fee6bcf22bb",
+          "source_name": "Unstructured Data/GV-SUP-AUD-502 Quality Audit Report QA Assessment.pdf",
+          "timestamp": "2026-10-22T16:18:33.509986+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S4"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 24,
+      "question": "Give a concise multi-source summary of X-7000 failure diagnosis, maintenance response, and provenance.",
+      "mode": "cold",
+      "cache_hit": false,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {
+        "mongo_ms": 1.0,
+        "vector_ms": 33.06
+      },
+      "retrieval_total_ms": 34.13,
+      "llm_ms": 19739.7,
+      "total_ms": 19773.93,
+      "answer": "**Fault diagnosis (telemetry)**  \n- SN\u2011X7\u20110099 repeatedly logged fault **ERR_INV_404** (DC over\u2011current trip) at 2026\u201109\u201117\u202f13:00 and 2026\u201109\u201118\u202f13:00 with 62\u202f\u00b0C, 980\u202fV, 4\u202f500\u202fA, 82.5\u202f% SOC, indicating a thyristor\u2011pack issue. [S1][S3]  \n- SN\u2011X7\u20110150 recorded a critical **ERR_FUSE_001** (DC string fuse blown) at 2026\u201109\u201118\u202f11:30 with 85\u202f\u00b0C, 980\u202fV, 8\u202f250\u202fA, 75.0\u202f% SOC, pointing to fuse failure. [S2]\n\n**Maintenance response (engineering docs)**  \n- Incremental Maintenance Bulletin (m6_incremental_test.txt) recommends inspecting inverter cooling airflow, electrical connections, and battery temperature during scheduled X\u20117000 service. [S4]  \n- Battery Maintenance Note (m6_test_doc.txt) stresses that high\u2011temperature operation increases thermal stress; technicians must check cooling airflow, temperature, inverter fault codes, and connections. [S5]  \n- The X\u20117000 manual (Unstructured Data/GV\u2011MAN\u2011X7000\u2011001) lists",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90196",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T11:30:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90190",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-17T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "9e8632e47453e2ca08d905b49086668646d1c3ea",
+          "source_name": "m6_test_doc.txt",
+          "timestamp": "2026-11-12T21:26:28.745174+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "d2b0fb91a7dd686e21751492bf546296f24509af",
+          "source_name": "Unstructured Data/GV-MAN-X7000-001 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.292935+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "eef2bb7a3dd418d7ee2d35f835653f274c06c0fc",
+          "source_name": "Unstructured Data/GV-INC-2024-119 Field Incident Low Isolation Trip.pdf",
+          "timestamp": "2026-10-22T16:18:31.356208+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    }
+  ],
+  "warm_cache_results": [
+    {
+      "question_id": 1,
+      "question": "What are common failure modes for X-7000 batteries in high-temperature environments, and what maintenance actions are recommended?",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 6.051,
+      "answer": "Common failure modes in high\u2011temperature operation are:\n\n- **DC over\u2011current trips** (ERR_INV_404) and **fuse blowouts** (ERR_FUSE_001). Telemetry shows both faults occurring at 62\u202f\u00b0C and 85\u202f\u00b0C, respectively, with high current spikes and high SOC values [S1][S2].\n- **Thermal stress on inverter cooling loops** and **cell\u2011temperature spikes** can precipitate these events. Documentation notes that high\u2011temperature environments increase thermal stress on the battery systems and recommend inspecting cooling airflow, temperature, and connections [S4][S5].\n- The LFP chemistry is robust, but improper thermal management can trigger thermal runaway. The manual lists rapid \u0394T >\u202f2.5\u202f\u00b0C/min as a warning and calls for automated isolation and BMS\u2011controlled shutdowns [S6].\n\nRecommended maintenance actions:\n\n1. **Inspect and clean dual\u2011loop active liquid glycol\u2011water cooling** for airflow and flow rate; verify temperature sensors and coolant levels.  \n2. **Check electrical connections** on inverter, thyristor pack, and semiconductor fuses for looseness or corrosion.  \n3. **Verify BMS fault logs** for ERR_INV_404 and ERR_FUSE_001 and replace any blown fuses or faulty thyristor components.  \n4. **Perform scheduled temperature profiling** before returning the system to service, ensuring no rapid",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90196",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T11:30:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90190",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-17T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "9e8632e47453e2ca08d905b49086668646d1c3ea",
+          "source_name": "m6_test_doc.txt",
+          "timestamp": "2026-11-12T21:26:28.745174+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "d2b0fb91a7dd686e21751492bf546296f24509af",
+          "source_name": "Unstructured Data/GV-MAN-X7000-001 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.292935+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "42f8733550c8c3f8a9ff8d338eaa512119e5ca5f",
+          "source_name": "Unstructured Data/GV-SOP-DECOM-601 SOP EOL Decomissioning.pdf",
+          "timestamp": "2026-10-22T16:18:32.607355+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S4",
+          "S5",
+          "S6"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 2,
+      "question": "Show me the service history for equipment SN-4829 and explain any related warranty claims using the available evidence.",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "sql",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 3.6719,
+      "answer": "**Service history for SN\u20114829 (PowerStation\u202fG\u20113500)**  \n- **Preventive Maintenance** \u2013 Service record SVC\u20114829\u2011001 was logged on\u202f2026\u201108\u201115\u202f10:30:00. The technician performed a routine inspection of the battery enclosure, cooling system, and electrical connections. No problem code was recorded and the resolution was \u201cRoutine inspection completed\u201d\u00a0[S1].\n\n**Warranty claims**  \n- A warranty claim CLM\u20114829\u2011001 was filed the day after the service (2026\u201108\u201116). The claim was classified as a \u201cPreventive Service Review,\u201d was closed with an amount of\u202f$450.00, and no failure code was reported. The warranty status for the unit remains active until\u202f2027\u201112\u201131\u00a0[S1].\n\nNo additional warranty\u2011related incidents or claims are documented for this serial number in the available evidence.",
+      "provenance": {
+        "S1": {
+          "source_type": "sql",
+          "source_id": "SVC-4829-001",
+          "source_name": "gigavolt_m5",
+          "timestamp": null,
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90198",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:15:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90188",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-17T12:15:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90178",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-16T12:15:00.000Z",
+          "chunk_index": null
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "eef2bb7a3dd418d7ee2d35f835653f274c06c0fc",
+          "source_name": "Unstructured Data/GV-INC-2024-119 Field Incident Low Isolation Trip.pdf",
+          "timestamp": "2026-10-22T16:18:31.356208+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+          "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+          "timestamp": "2026-10-22T16:18:31.177967+00:00",
+          "chunk_index": 0
+        },
+        "S8": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 3,
+      "question": "What maintenance actions are recommended after an X-7000 inverter fault, and what evidence supports those actions?",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 1.3066,
+      "answer": "- **Inspect inverter cooling airflow and electrical connections** \u2013 The Incremental Maintenance Bulletin and the X\u20117000 Battery Maintenance Note recommend examining cooling airflow, battery temperature, and all electrical connections after a fault [S4][S5].  \n- **Check the thyristor pack** \u2013 Telemetry from SN\u2011X7\u20110099 shows a DC overcurrent trip (ERR_INV_404) and notes \u201cInspect thyristor pack\u201d [S1][S3].  \n- **Replace blown DC string fuses** \u2013 When the fault code is ERR_FUSE_001, the telemetry notes \u201cReplace semiconductor fuse\u201d [S2].  \n- **Apply the snubber upgrade retrofit** \u2013 Field logs and the Engineering Change Order indicate that units reporting ERR_INV_404 under high temperature should receive the RET\u2011X7\u2011019 retrofit kit, which replaces the old RC snubber with a MOV\u2011based module and updates firmware to v2.4.11\u2011b [S7].  \n\nThese steps are directly supported by the cited telemetry events and the maintenance/engineering documents.",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90196",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T11:30:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90190",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-17T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "9e8632e47453e2ca08d905b49086668646d1c3ea",
+          "source_name": "m6_test_doc.txt",
+          "timestamp": "2026-11-12T21:26:28.745174+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+          "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+          "timestamp": "2026-10-22T16:18:31.177967+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "9e82d0b230857775d848c7836d090069b861dd45",
+          "source_name": "Unstructured Data/GV-ECO-2024-019 Engineering Change Order.pdf",
+          "timestamp": "2026-10-22T16:18:30.705206+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S7"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 4,
+      "question": "Compare observed X-7000 high-temperature telemetry with the technical documentation's recommended response.",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 1.3344,
+      "answer": "The telemetry shows two high\u2011temperature events:\n\n* **SN\u2011X7\u20110099**: 62\u202f\u00b0C (high\u2011current over\u2011trip) \u2013 FAULT status, ERR_INV_404\u202f[S1][S3].\n* **SN\u2011X7\u20110150**: 85\u202f\u00b0C (critical fuse blow) \u2013 CRITICAL_FAULT status, ERR_FUSE_001\u202f[S2].\n\nThe technical documents prescribe the following high\u2011temperature response:\n\n1. **Maintenance notes (m6_test_doc.txt & m6_incremental_test.txt)** emphasize inspecting cooling airflow, battery temperature, inverter fault codes, and electrical connections during maintenance\u202f[S4][S5].\n2. **SOP BESS Emergency Response (GV\u2011SOP\u2011SAFETY\u2011900)** defines a 2\u2011stage escalation: Stage\u202f1 for \u0394T\u202f>\u202f2\u202f\u00b0C/min; Stage\u202f2 for Temp\u202f>\u202f75\u202f\u00b0C, where the procedure calls for automatic DC contactor drop and external cooling if required\u202f[S6].\n\nThus, the 85\u202f\u00b0C telemetry exceeds the SOP Stage\u202f2 threshold, warranting an automatic isolation and a review of cooling airflow,",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90196",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T11:30:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90190",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-17T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "9e8632e47453e2ca08d905b49086668646d1c3ea",
+          "source_name": "m6_test_doc.txt",
+          "timestamp": "2026-11-12T21:26:28.745174+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "8edd9efff658fbdb8161ea26fb2dff0f11bd9a45",
+          "source_name": "Unstructured Data/GV-SOP-SAFETY-900 SOP BESS Emergency Response and Fire Safety.pdf",
+          "timestamp": "2026-10-22T16:18:32.892131+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "eef2bb7a3dd418d7ee2d35f835653f274c06c0fc",
+          "source_name": "Unstructured Data/GV-INC-2024-119 Field Incident Low Isolation Trip.pdf",
+          "timestamp": "2026-10-22T16:18:31.356208+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 5,
+      "question": "For SN-4829, combine equipment, service, warranty, telemetry, and technical-document evidence into a concise diagnostic summary.",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "sql",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 1.9859,
+      "answer": "**Diagnostic Summary \u2013 SN\u20114829 (PowerStation\u202fG\u20113500)**  \n- **Equipment & Warranty:** SN\u20114829 is a PowerStation\u202fG\u20113500 with an active warranty expiring 2027\u201112\u201131. A preventive service review (SVC\u20114829\u2011001) was performed on 2026\u201108\u201115, with no problems logged and the warranty claim CLM\u20114829\u2011001 closed with a $450.00 charge for the inspection[S1].  \n- **Telemetry:** Over the last four days the unit has remained in STANDBY, showing no fault codes, stable temperature (31\u202f\u00b0C), voltage (800\u202fV), zero current, and SOC 95\u202f%[S4\u2011S6]. No abnormal telemetry (\u0394T, high temp, or error codes) has been recorded.  \n- **Service & Technical Docs:** The SOP for field warranty claims (GV\u2011SOP\u2011WAR\u2011101) lists ERR_BMS_701 and ERR_BMS_708 as qualifying faults; none are present in the telemetry. The G\u20113500 manual (GV\u2011MAN\u2011G3500\u2011002) lists common thermal and isolation faults (ERR_HVAC_302, ERR_ISO_109) that are absent here. The BESS emergency SOP (GV\u2011SOP\u2011SAFETY\u2011900",
+      "provenance": {
+        "S1": {
+          "source_type": "sql",
+          "source_id": "SVC-4829-001",
+          "source_name": "gigavolt_m5",
+          "timestamp": null,
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90198",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:15:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90188",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-17T12:15:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90178",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-16T12:15:00.000Z",
+          "chunk_index": null
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "eef2bb7a3dd418d7ee2d35f835653f274c06c0fc",
+          "source_name": "Unstructured Data/GV-INC-2024-119 Field Incident Low Isolation Trip.pdf",
+          "timestamp": "2026-10-22T16:18:31.356208+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "8edd9efff658fbdb8161ea26fb2dff0f11bd9a45",
+          "source_name": "Unstructured Data/GV-SOP-SAFETY-900 SOP BESS Emergency Response and Fire Safety.pdf",
+          "timestamp": "2026-10-22T16:18:32.892131+00:00",
+          "chunk_index": 0
+        },
+        "S8": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 6,
+      "question": "What does the available evidence say about thermal stress on X-7000 batteries and the inspections technicians should perform?",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 1.3541,
+      "answer": "Thermal stress on X\u20117000 units is evident when recorded temperatures exceed normal operating ranges. Telemetry shows two fault events: SN\u2011X7\u20110099 reached 62\u202f\u00b0C and triggered a DC over\u2011current trip [S1], while SN\u2011X7\u20110150 hit 85\u202f\u00b0C and caused a fuse blow [S2]. These values are above the typical 36\u202f\u00b0C baseline reported for an operational unit [S3], indicating elevated thermal load.\n\nInspection requirements are specified in the maintenance documents:\n\n- Inspect cooling airflow (dual\u2011loop liquid glycol\u2011water) and verify that coolant flow meets the 42\u202fL/min requirement and that there is no pressure drop over a 60\u2011min hold [S4][S5].\n- Measure battery temperature before returning the system to service to ensure it is within the acceptable range [S4][S5].\n- Check inverter fault codes, electrical connections, and all DC bus insulation and busbar fasteners for integrity [S4][S7].\n- Verify that the BMS has not registered high\u2011delta cell voltage or other early warning indicators of thermal runaway (\u0394T\u202f>\u202f2.5\u202f\u00b0C/min, terminal voltage <\u202f2.10\u202fV, or outgassing) before re\u2011energizing [S6].\n\nThese steps help prevent further thermal stress and mitigate",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90196",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T11:30:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90192",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T10:15:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "9e8632e47453e2ca08d905b49086668646d1c3ea",
+          "source_name": "m6_test_doc.txt",
+          "timestamp": "2026-11-12T21:26:28.745174+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "d2b0fb91a7dd686e21751492bf546296f24509af",
+          "source_name": "Unstructured Data/GV-MAN-X7000-001 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.292935+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "c333a9f59aad34c998aab95199d89411f3a2d9cf",
+          "source_name": "Unstructured Data/GV-SOP-COMM-201 SOP Megapack X-7000 SAT.pdf",
+          "timestamp": "2026-10-22T16:18:32.509905+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 7,
+      "question": "What corrective action is recommended for an under-voltage cutoff, and what technical source supports it?",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 0.1014,
+      "answer": "The recommended corrective action for an under\u2011voltage cutoff is to perform a controlled grid\u2011tie depletion, bringing the average cell voltage down to the specified lower cutoff before de\u2011energizing the system. For LFP modules (e.g., X\u20117000), this cutoff is 2.50\u202fV per cell\u202f[S5]. This procedure ensures the pack is safely discharged to zero potential before any further disassembly or maintenance is undertaken.",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "17d4794b3565b107059db5d3f15312b12cc0f7ce",
+          "source_name": "Unstructured Data/GV-SOP-COMM-201 SOP Megapack X-7000 SAT.pdf",
+          "timestamp": "2026-10-22T16:18:32.509951+00:00",
+          "chunk_index": 1
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "42f8733550c8c3f8a9ff8d338eaa512119e5ca5f",
+          "source_name": "Unstructured Data/GV-SOP-DECOM-601 SOP EOL Decomissioning.pdf",
+          "timestamp": "2026-10-22T16:18:32.607355+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "9e82d0b230857775d848c7836d090069b861dd45",
+          "source_name": "Unstructured Data/GV-ECO-2024-019 Engineering Change Order.pdf",
+          "timestamp": "2026-10-22T16:18:30.705206+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S5"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 8,
+      "question": "What should a technician do after a DC string fuse fault before restoring the breaker?",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 0.7026,
+      "answer": "After a DC\u2011string fuse fault (ERR_FUSE_001) the technician must:\n\n- Replace the blown semiconductor fuse with the specified part\u202fFUS\u2011FAST\u2011600A.  \n- Inspect the DC bus polarity and verify correct wiring before restoring the breaker.  \n\nThese steps ensure the fault is cleared and the system is safely re\u2011energized. [S5]",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "3ae350afc5d2fcdea33627d6fcdc04a682d3d473",
+          "source_name": "Unstructured Data/GV-MAN-C1200-003 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:31.602545+00:00",
+          "chunk_index": 1
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+          "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+          "timestamp": "2026-10-22T16:18:31.177967+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "69bea7fc90c55dae577be4613b9c6623cce23278",
+          "source_name": "Unstructured Data/GV-MAN-X7000-001 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.293046+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S5"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 9,
+      "question": "Summarize preventive maintenance guidance that is relevant to Gigavolt battery and inverter systems.",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 0.7663,
+      "answer": "Preventive maintenance for Gigavolt battery and inverter systems should include the following routine checks:\n\n- **Inverter cooling and airflow** \u2013 Inspect forced\u2011air HVAC ducts and micro\u2011channel chillers for obstructions, verify fan operation and air\u2011flow rates before each scheduled service cycle. \u202f[S4][S5]  \n- **Electrical connections** \u2013 Tighten all bus\u2011bar, inverter\u2011module, and battery\u2011rack connectors; check continuity and resistance per the inverter fault\u2011code list. \u202f[S5]  \n- **Battery temperature monitoring** \u2013 Record cell and module temperatures during idle periods; any sustained rise above nominal indicates thermal\u2011stress risk. \u202f[S5]  \n- **Coolant system health** \u2013 Confirm coolant pump operation, filter status, and pressure; replace FLT\u2011AIR\u201112 or FLT\u2011GLY\u2011701 filters at least quarterly to satisfy warranty coverage. \u202f[S6]  \n- **Cell\u2011level integrity checks** \u2013 Inspect for swelling (>1.5\u202fmm) or structural deformation; isolate affected modules and log incidents. \u202f[S7]  \n\nThese activities reduce the likelihood of faults such as ERR_COOL_302 (coolant failure) and ERR_INV_404 (inverter commutation/surge) that can trigger warranty claims.",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "9e8632e47453e2ca08d905b49086668646d1c3ea",
+          "source_name": "m6_test_doc.txt",
+          "timestamp": "2026-11-12T21:26:28.745174+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "91ebb08a3131acd0d6b3d4f3ca927215bea2fc26",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081735+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S4",
+          "S5",
+          "S6",
+          "S7"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 10,
+      "question": "What evidence is available for diagnosing an inverter-related failure, and which evidence comes from telemetry versus documentation?",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 0.0828,
+      "answer": "Evidence for diagnosing an inverter\u2011related failure comes from both telemetry and engineering documentation.\n\n**Telemetry observations**  \n- SN\u2011X7\u20110099 recorded a *FAULT* status with code\u202fERR_INV_404 (DC overcurrent trip) on\u202f2026\u201109\u201118\u202f13:00:00, showing high temperature, voltage, and current values and a note to inspect the thyristor pack[S2].  \n- SN\u2011X7\u20110150\u2019s log (2026\u201111\u201112\u202f20:00:00) shows status\u202fTEST with fault code\u202fM6_TEST, a generic test condition but still telemetry data[S1].  \n- The incident report for SN\u2011X7\u20110094 logs telemetry events leading to ERR_INV_404 and a pre\u2011charge fault (ERR_PRE_003) during a ramp, including current surge and arc flash details[S5].\n\n**Engineering documentation**  \n- The incremental maintenance bulletin advises inspecting inverter cooling airflow and electrical connections during X\u20117000 maintenance[S4].  \n- The field incident report includes teardown findings and corrective actions for pre\u2011charge resistor and contactor failures, and firmware update requirements[S5].  \n- The manual provides diagnostic steps for isolating inverter faults (e.g., measuring insulation resistance, inspecting IGBT snubber capacitors) and replacement procedures for the inverter gate\u2011drive board[S6",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+          "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+          "timestamp": "2026-10-22T16:18:31.177967+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "9e82d0b230857775d848c7836d090069b861dd45",
+          "source_name": "Unstructured Data/GV-ECO-2024-019 Engineering Change Order.pdf",
+          "timestamp": "2026-10-22T16:18:30.705206+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S4",
+          "S5"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 11,
+      "question": "Explain how high temperature, battery state, and fault codes should be interpreted together without claiming causation.",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "sql",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 0.0765,
+      "answer": "Telemetry logs show that high temperature is often recorded near fault codes that involve thermal or cooling issues. For example, the Megapack X\u20117000 logged a 62\u202f\u00b0C temperature when fault **ERR_INV_404** (DC Overcurrent Trip) was triggered, and the C\u20111200 recorded 56.5\u202f\u00b0C with fault **ERR_COOL_302** (Low Coolant Flow Rate) [S1][S2]. The manuals confirm that these codes are associated with thermal root causes: **ERR_INV_404** is linked to inverter commutation failure and **ERR_COOL_302** to coolant pump or flow obstruction [S6].  \n\nThe state of charge (SOC) can contextualize the severity; a high SOC (\u224882\u202f%) in the Megapack suggests a higher energy throughput, which may exacerbate heat generation, whereas a moderate SOC (\u224845\u202f%) in the C\u20111200 coincides with a coolant flow issue that could be less load\u2011dependent.  \n\nWhen interpreting together, technicians should treat the temperature reading as supporting evidence for the fault\u2019s root cause but not as proof of causation. The manuals require that, upon encountering a high\u2011temperature fault, a controlled shutdown and a specific corrective action (e.g., inspect thyristor pack for **ERR_INV_404** or purge air bubbles for **ERR_COOL_302**)",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90197",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:00:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "69bea7fc90c55dae577be4613b9c6623cce23278",
+          "source_name": "Unstructured Data/GV-MAN-X7000-001 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.293046+00:00",
+          "chunk_index": 1
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "3ae350afc5d2fcdea33627d6fcdc04a682d3d473",
+          "source_name": "Unstructured Data/GV-MAN-C1200-003 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:31.602545+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S6"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 12,
+      "question": "What warranty and service information is available for SN-4829, and what cannot be concluded from the evidence?",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "sql",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 0.0742,
+      "answer": "**Warranty & Service status for SN\u20114829**  \n- SN\u20114829 is a PowerStation\u202fG\u20113500.  \n- Warranty is **ACTIVE** and expires **31\u202fDec\u202f2027** [S1].  \n- A service record **SVC\u20114829\u2011001** was logged on **15\u202fAug\u202f2026** (10:30) as a **Preventive Maintenance** event, with no problem code and routine inspection of battery enclosure, cooling system, and electrical connections [S1].  \n- A related warranty claim **CLM\u20114829\u2011001** (Preventive Service Review) was filed 16\u202fAug\u202f2026, closed, with a closed status and $450.00 claim amount; no failure code was recorded [S1].\n\n**What cannot be concluded**  \n- The evidence does not indicate any future or past defects, failure events, or non\u2011routine maintenance beyond the August 2026 preventive service.  \n- No information is provided about parts replacement, field repairs, or any service beyond the documented preventive inspection.  \n- Telemetry logs ([S2]\u2011[S4]) show normal standby operation; they do not prove any warranty\u2011relevant fault or degradation.  \n\nThus, only the",
+      "provenance": {
+        "S1": {
+          "source_type": "sql",
+          "source_id": "SVC-4829-001",
+          "source_name": "gigavolt_m5",
+          "timestamp": null,
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90198",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:15:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90188",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-17T12:15:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90178",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-16T12:15:00.000Z",
+          "chunk_index": null
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "eef2bb7a3dd418d7ee2d35f835653f274c06c0fc",
+          "source_name": "Unstructured Data/GV-INC-2024-119 Field Incident Low Isolation Trip.pdf",
+          "timestamp": "2026-10-22T16:18:31.356208+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+          "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+          "timestamp": "2026-10-22T16:18:31.177967+00:00",
+          "chunk_index": 0
+        },
+        "S8": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S4"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 13,
+      "question": "What field warranty claim information should be documented when a failure leads to technician dispatch?",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "sql",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 0.7271,
+      "answer": "Field warranty claims must capture the following documented items when a technician is dispatched:\n\n1. **Equipment Identification & Failure Context**  \n   - Serial number of the unit and the customer ID linked in the ticket.  \n   - Failure type and qualifying fault code(s) that triggered the dispatch (e.g., ERR_INV_404, ERR_COOL_302) as defined in the Warranty Eligibility Verification Matrix.  \n   - Coverage status (e.g., covered 100\u202f% parts & labor, voided, or ECO\u20112024\u2011019) and any required customer action or liability. \u202f[S4]\n\n2. **Telemetry Evidence**  \n   - Trailing 48\u202fh of telemetry logs with pre\u2011trip alerts, peak cell temperatures, and bus\u2011voltage anomalies.  \n   - Specific telemetry entries proving the fault event (e.g., ERR_INV_404, ERR_PRE_003) and the associated severity, temperature, voltage, current, and SOC at the time of fault. \u202f[S4]\n\n3. **Parts & Safety Preparation**  \n   - List of pre\u2011allocated replacement parts (e.g., FLT\u2011GLY\u2011701, PCB\u2011DRV\u20113500, FUS\u2011FAST\u2011600A) referenced",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+          "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+          "timestamp": "2026-10-22T16:18:31.177967+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "3ae350afc5d2fcdea33627d6fcdc04a682d3d473",
+          "source_name": "Unstructured Data/GV-MAN-C1200-003 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:31.602545+00:00",
+          "chunk_index": 1
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S4"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 14,
+      "question": "What technical evidence describes safe recovery or restart actions after an electrical fault?",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 0.1174,
+      "answer": "**Safe recovery / restart actions after an electrical fault**\n\n1. **Automatic trip and isolation** \u2013 A fault such as\u202fERR_INV_404 (DC over\u2011current) triggers the inverter\u2019s over\u2011current protection, and the high\u2011speed protection circuit immediately isolates the unit from the upstream substation [S4].  \n2. **Controlled shutdown** \u2013 For high\u2011severity faults, the manual \u201cInitiate controlled shutdown\u201d procedure is required. After a fault (e.g., ERR_BMS_701 or ERR_INV_404) the system must be brought to a safe state before any power is re\u2011applied [S7].  \n3. **Component inspection and replacement** \u2013 Post\u2011fault, inspect the specified parts (e.g., INV\u2011SCR\u20119901 thyristor pack, pre\u2011charge resistor RES\u2011PR\u201150) and replace any failed component per the corrective action table ([S7][S4]).  \n4. **Verification before restart** \u2013 Confirm that all telemetry parameters (voltage, current, temperature) have returned to normal ranges and that fault logs have cleared. Only after these checks can the unit be re\u2011energized and power export resumed.  \n\nThese procedures are derived from the fault\u2011handling firmware updates, field inspection mandates, and manual",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+          "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+          "timestamp": "2026-10-22T16:18:31.177967+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "3ae350afc5d2fcdea33627d6fcdc04a682d3d473",
+          "source_name": "Unstructured Data/GV-MAN-C1200-003 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:31.602545+00:00",
+          "chunk_index": 1
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "69bea7fc90c55dae577be4613b9c6623cce23278",
+          "source_name": "Unstructured Data/GV-MAN-X7000-001 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.293046+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S4",
+          "S7"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 15,
+      "question": "What X-7000 maintenance guidance is most relevant after an overheating or thermal event?",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 0.0904,
+      "answer": "**Post\u2011thermal\u2011event maintenance steps for a Gigavolt X\u20117000**\n\n1. **Inspect cooling system and airflow** \u2013 The X\u20117000 Maintenance Note [S4] and Incremental Maintenance Bulletin [S5] both recommend checking inverter cooling airflow and confirming that coolant flow is unobstructed.  \n2. **Verify battery temperature and thermal status** \u2013 [S4] and [S7] advise inspecting battery temperature prior to returning the unit to service, and [S7]\u2019s fault\u2011code tree for\u202fERR_BMS_705 details the procedure for addressing cell over\u2011temperature.  \n3. **Check inverter fault logs and electrical connections** \u2013 [S7] lists ERR_INV_404 (DC Overcurrent Trip) as a corrective action of inspecting the thyristor pack and output fuses, while [S4] notes inspection of inverter fault codes and electrical connections.  \n4. **Replace damaged components if required** \u2013 Telemetry [S1] shows a thyristor\u2011pack fault (ERR_INV_404), and [S2] shows a blown fuse (ERR_FUSE_001); the corrective actions in [S7] recommend inspecting or replacing the thy",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90196",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T11:30:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90192",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T10:15:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "9e8632e47453e2ca08d905b49086668646d1c3ea",
+          "source_name": "m6_test_doc.txt",
+          "timestamp": "2026-11-12T21:26:28.745174+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "69bea7fc90c55dae577be4613b9c6623cce23278",
+          "source_name": "Unstructured Data/GV-MAN-X7000-001 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.293046+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S4",
+          "S5",
+          "S7"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 16,
+      "question": "Using the available sources, distinguish operational telemetry observations from engineering maintenance recommendations.",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 0.0813,
+      "answer": "**Telemetry observations (operational data):**  \n- Equipment SN\u2011X7\u20110150 recorded status **TEST** on 2026\u201111\u201112\u202fT20:00:00Z with fault code\u202fM6_TEST, no severity or physical metrics [S1].  \n- Equipment SN\u2011X7\u20110099 (Gigavolt\u202fMegapack\u202fX\u20117000) recorded status **FAULT** on 2026\u201109\u201118\u202fT13:00:00Z with fault code\u202fERR_INV_404, high severity, 62.0\u202f\u00b0C, 980\u202fV, 4500\u202fA, 82.5\u202f% SOC; noted \u201cDC Overcurrent Trip\u201d and \u201cInspect thyristor pack\u201d [S2].  \n- Equipment SN\u2011C12\u20110001 (C\u20111200) recorded status **WARNING** on 2026\u201109\u201118\u202fT12:30:00Z with fault code\u202fERR_COOL_302, moderate severity, 56.5\u202f\u00b0C, 480\u202fV, 150\u202fA, 45.0\u202f% SOC; note \u201cLow coolant flow rate\u201d and \u201cPurge air bubbles using service valve\u202fSV\u20113\u201d [S3].  \n\n**Engineering maintenance recommendations (procedural guidance):**  \n- The *M",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "8edd9efff658fbdb8161ea26fb2dff0f11bd9a45",
+          "source_name": "Unstructured Data/GV-SOP-SAFETY-900 SOP BESS Emergency Response and Fire Safety.pdf",
+          "timestamp": "2026-10-22T16:18:32.892131+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "3ae350afc5d2fcdea33627d6fcdc04a682d3d473",
+          "source_name": "Unstructured Data/GV-MAN-C1200-003 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:31.602545+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 17,
+      "question": "What evidence supports checking cooling airflow, battery temperature, inverter fault codes, and electrical connections during maintenance?",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 0.7553,
+      "answer": "Cooling airflow, battery temperature, inverter fault codes, and electrical connections are verified during scheduled maintenance to pre\u2011empt common failure modes.  \n- The **Maintenance Bulletin** [S4] explicitly instructs technicians to inspect \u201cinverter cooling airflow and electrical connections\u201d and to \u201cinspect battery temperature before returning the system to service\u201d during X\u20117000 maintenance.  \n- The **Warranty SOP** [S5] lists **ERR_COOL_302** (low coolant flow) and **ERR_INV_404** (inverter commutation failure) as qualifying fault codes, requiring \u201cinspection of cooling flow\u201d and \u201cinspection of inverter commutation\u201d as part of the dispatch workflow.  \n- The **X\u20117000 Manual** [S6] details that **ERR_COOL_302** causes \u201cLow Coolant Flow Rate\u201d and prescribes inspecting flow sensors and purging air bubbles, while **ERR_INV_404** is a \u201cHigh Inverter commutation failure\u201d that mandates inspecting the thyristor pack and output fuses.  \n- Telemetry records ([S2][S3]) show actual instances where high temperature (62\u202f\u00b0C) and low coolant flow (56.5\u202f\u00b0C) triggered fault codes",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "69bea7fc90c55dae577be4613b9c6623cce23278",
+          "source_name": "Unstructured Data/GV-MAN-X7000-001 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.293046+00:00",
+          "chunk_index": 1
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 18,
+      "question": "For SN-X7-0150, combine the available structured equipment record with telemetry and relevant technical maintenance guidance.",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "sql",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 0.0922,
+      "answer": "**Equipment Summary \u2013 SN\u2011X7\u20110150 (Gigavolt Megapack\u202fX\u20117000)**  \n- Warranty: active until 2027\u201112\u201131.  \n- Service record (synthetic demo) shows corrective maintenance on 2026\u201109\u201103 for fault **ERR_FUSE_001**: the DC\u2011string semiconductor fuse was replaced and post\u2011repair verification completed. Warranty claim CLM\u2011X7\u20110150\u2011001 was approved for $1,250.00. [S1]  \n\n**Telemetry context**  \n- 2026\u201109\u201117\u202f&\u202f09\u201118: consecutive critical\u2011fault events with fault code\u202fERR_FUSE_001, 85\u202f\u00b0C, 980\u202fV, 8,250\u202fA, SOC\u202f75\u202f% and note \u201cDC String Fuse Blown. Replace semiconductor fuse.\u201d [S4][S3]  \n- 2026\u201111\u201112: a TEST status log (M6_TEST, no severity) shows no ongoing fault. [S2]  \n\n**Maintenance guidance**  \n- SOP Field Warranty Claims (SOP\u202fWAR\u2011101) lists **ERR_FUSE_001** as a qualifying fault under \u201cDC String Fuse\u201d \u2013 coverage includes parts & labor",
+      "provenance": {
+        "S1": {
+          "source_type": "sql",
+          "source_id": "SVC-X7-0150-001",
+          "source_name": "gigavolt_m5",
+          "timestamp": null,
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90196",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T11:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90186",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-17T11:30:00.000Z",
+          "chunk_index": null
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "eef2bb7a3dd418d7ee2d35f835653f274c06c0fc",
+          "source_name": "Unstructured Data/GV-INC-2024-119 Field Incident Low Isolation Trip.pdf",
+          "timestamp": "2026-10-22T16:18:31.356208+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S8": {
+          "source_type": "vector",
+          "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+          "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+          "timestamp": "2026-10-22T16:18:31.177967+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S3",
+          "S4"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 19,
+      "question": "What failure evidence is available for X-7000 equipment operating at elevated temperatures?",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "sql",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 0.0996,
+      "answer": "**Failure evidence at elevated temperatures**\n\n- Two telemetry events show X\u20117000 units tripping at temperatures above the typical operating envelope.  \n  * SN\u2011X7\u20110150 recorded a *CRITICAL_FAULT* (ERR_FUSE_001) at 85\u202f\u00b0C, indicating a DC\u2011string fuse blow while the unit was at 85\u202f\u00b0C\u202f[S2].  \n  * SN\u2011X7\u20110099 recorded a *FAULT* (ERR_INV_404) at 62\u202f\u00b0C, a DC\u2011overcurrent trip while the unit was at 62\u202f\u00b0C\u202f[S1][S3].\n\n- Engineering documentation notes that high\u2011temperature operation increases thermal stress on the battery system and recommends inspecting cooling airflow, battery temperature, and inverter fault codes during maintenance\u202f[S4].\n\nThese telemetry observations directly link elevated temperatures to fault conditions in X\u20117000 equipment.",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90196",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T11:30:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90190",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-17T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "9e8632e47453e2ca08d905b49086668646d1c3ea",
+          "source_name": "m6_test_doc.txt",
+          "timestamp": "2026-11-12T21:26:28.745174+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "eef2bb7a3dd418d7ee2d35f835653f274c06c0fc",
+          "source_name": "Unstructured Data/GV-INC-2024-119 Field Incident Low Isolation Trip.pdf",
+          "timestamp": "2026-10-22T16:18:31.356208+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+          "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+          "timestamp": "2026-10-22T16:18:31.177967+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S3",
+          "S4"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 20,
+      "question": "What diagnostic sequence would you recommend for an X-7000 thermal fault using only the retrieved Gigavolt evidence?",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 0.0861,
+      "answer": "**Diagnostic sequence for X\u20117000 thermal fault (ERR_INV_404)**  \n\n1. **Verify telemetry** \u2013 Confirm the fault code and parameters (temperature\u202f62\u202f\u00b0C, voltage\u202f980\u202fV, current\u202f4.5\u202fkA) from the recent telemetry record [S1][S3].  \n2. **Inspect inverter hardware** \u2013 Check the thyristor pack and related cooling airflow per the maintenance bulletin: \u201cInspect inverter cooling airflow and electrical connections during scheduled X\u20117000 maintenance\u201d [S4].  \n3. **Examine battery temperature** \u2013 Verify the battery temperature prior to service, as high\u2011temperature operation increases thermal stress and is noted in the maintenance note [S5].  \n4. **Review pre\u2011charge and contactor condition** \u2013 Though the fault is overcurrent, pre\u2011charge resistor and contactor integrity can contribute to overcurrent; inspect RES\u2011PR\u201150 and CON\u2011MAIN\u2011800 if the fault recurs, referencing the incident report that linked ERR_INV_404 to contactor flashover [S7].  \n5. **Check firmware** \u2013 Ensure the inverter firmware is at least v2.4.11\u2011b, which includes the pre\u2011charge abort feature that mitigates",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90196",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T11:30:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90190",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-17T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "9e8632e47453e2ca08d905b49086668646d1c3ea",
+          "source_name": "m6_test_doc.txt",
+          "timestamp": "2026-11-12T21:26:28.745174+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "eef2bb7a3dd418d7ee2d35f835653f274c06c0fc",
+          "source_name": "Unstructured Data/GV-INC-2024-119 Field Incident Low Isolation Trip.pdf",
+          "timestamp": "2026-10-22T16:18:31.356208+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "ef9182b29260dd5fdbbaa7a15094c25911d96f27",
+          "source_name": "Unstructured Data/GV-INC-2024-104 Field Incident Report Contactor Flashover.pdf",
+          "timestamp": "2026-10-22T16:18:31.177967+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S3",
+          "S4",
+          "S5",
+          "S7"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 21,
+      "question": "What voltage or current related fault guidance appears in the technical documentation, and what corrective actions are described?",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 0.0725,
+      "answer": "**Voltage\u2011 or current\u2011related fault guidance in the documentation**\n\n- **ERR_INV_404 (DC over\u2011current trip)** \u2013 Root cause: high inverter commutation failure or line\u2011to\u2011line bridge breakdown.  \n  - *Corrective action*: Inspect the thyristor pack (Part\u202fINV\u2011SCR\u20119901) and output fuses; review AC grid\u2011synchronization logs.  \n  - *Field\u2011level*: If the fault is isolated to a battery string, uncouple modules until the isolation resistance exceeds 100\u202fM\u03a9, then replace the faulty tray (Part\u202fMOD\u2011NMC\u201124V)[S4][S7].\n\n- **ERR_COOL_302 (low coolant flow rate)** \u2013 While mainly thermal, it also limits current\u2011draw capability.  \n  - *Corrective action*: Inspect flow sensor (Part\u202fSEN\u2011FL\u2011022), purge air bubbles using service valve\u202fSV\u20113, and top off with a 50/50 ethylene\u2011glycol mix[S7].\n\n- **ERR_HVAC_502 (chiller compressor overload warning)** \u2013 Indirectly limits voltage stability.  \n  - *Corrective action*: Clear condenser grilles, inspect refrigerant sight glass for moisture or bubbles[S4].\n\n- **ERR_B",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "17d4794b3565b107059db5d3f15312b12cc0f7ce",
+          "source_name": "Unstructured Data/GV-SOP-COMM-201 SOP Megapack X-7000 SAT.pdf",
+          "timestamp": "2026-10-22T16:18:32.509951+00:00",
+          "chunk_index": 1
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "69bea7fc90c55dae577be4613b9c6623cce23278",
+          "source_name": "Unstructured Data/GV-MAN-X7000-001 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.293046+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S4",
+          "S7"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 22,
+      "question": "How should a technician interpret a fault-code record alongside the relevant manual or SOP guidance?",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 0.0662,
+      "answer": "**Interpretation workflow**\n\n1. **Extract fault\u2011code and telemetry context** \u2013 Read the fault\u2011code (e.g., `ERR_INV_404`) and its severity, temperature, voltage, current, SOC, and notes from the telemetry record [S2][S3], [S1].  \n2. **Match to SOP or warranty matrix** \u2013 Search the field\u2011warranty SOP for the fault\u2011code. For `ERR_INV_404` the SOP lists it under \u201cInverter Commutation / Surge\u201d with coverage under ECO\u20112024\u2011019 and an upgrade kit RET\u2011X7\u2011019 issued at zero charge to the customer [S4].  \n3. **Verify telemetry proof** \u2013 Ensure the telemetry log contains the required proof (e.g., pre\u2011trip alerts, peak temperatures, bus voltage anomalies). The SOP requires scanning the last 48\u202fh of logs for such evidence [S4].  \n4. **Determine customer action** \u2013 If the fault is covered, the technician may dispatch replacement parts and issue the upgrade kit; if it is a customer\u2011action fault (e.g., deep discharge `ERR_VOLT_102`), the SOP directs a \u201cRejection / Out of Warranty\u201d and billing for service [S4].  \n5. **Follow safety and safety\u2011clearance steps** \u2013 If the fault severity is Stage\u202f2\u20134 (e.g",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "8edd9efff658fbdb8161ea26fb2dff0f11bd9a45",
+          "source_name": "Unstructured Data/GV-SOP-SAFETY-900 SOP BESS Emergency Response and Fire Safety.pdf",
+          "timestamp": "2026-10-22T16:18:32.892131+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "3ae350afc5d2fcdea33627d6fcdc04a682d3d473",
+          "source_name": "Unstructured Data/GV-MAN-C1200-003 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:31.602545+00:00",
+          "chunk_index": 1
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S3",
+          "S4"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 23,
+      "question": "What evidence is available about warranty handling when a technical failure requires field service?",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "sql",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 0.0727,
+      "answer": "Warranty handling for field\u2011service technical failures follows the \u201cField Warranty Claims & Technician Dispatch Protocol\u201d [S4].  \n- A failure ticket is created in the relational database with the customer ID, serial number, and symptom.  \n- Dispatchers attach the most recent 48\u202fh of telemetry logs (bms_telemetry.json) and scan for qualifying fault codes (e.g., ERR_COOL_302, ERR_INV_404, ERR_BMS_701).  \n- The SOP lists coverage status for each fault code, including 100\u202f% parts\u2011and\u2011labor coverage for manufacturing defects, covered cooling failures if preventive maintenance records exist, and coverage under ECO\u20112024\u2011019 for inverter commutation faults.  \n- Before dispatch, required replacement parts are pre\u2011allocated in the Parts_Inventory table and safety clearance must be signed if Stage\u202f2/3 safety events occurred.  \n\nIf the fault code is covered, a technician is dispatched, a formal Warranty_Claim is created, and the customer is billed nothing for parts and labor. If the fault is not covered (e.g., user abuse, unmaintained filters), the claim is rejected and the customer is billed for the service. This procedure is strictly followed for any technical failure that necessitates field service.",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "M6-TEST-001",
+          "source_name": "telemetry",
+          "timestamp": "2026-11-12T20:00:00Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90199",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T12:30:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "24ad6d5e9e4911ac07ca66ae59f069e27e563aac",
+          "source_name": "Unstructured Data/GV-SOP-WAR-101 SOP Field Warranty Claims.pdf",
+          "timestamp": "2026-10-22T16:18:33.005109+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "640117b789c5bee8eec331625aecd29cdbff0e0d",
+          "source_name": "Unstructured Data/GV-MAN-G3500-002 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.081836+00:00",
+          "chunk_index": 1
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "0a28d1157367b9a1993dffad54805fee6bcf22bb",
+          "source_name": "Unstructured Data/GV-SUP-AUD-502 Quality Audit Report QA Assessment.pdf",
+          "timestamp": "2026-10-22T16:18:33.509986+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S4"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    },
+    {
+      "question_id": 24,
+      "question": "Give a concise multi-source summary of X-7000 failure diagnosis, maintenance response, and provenance.",
+      "mode": "warm_cache",
+      "cache_hit": true,
+      "sources_used": [
+        "mongo",
+        "vector"
+      ],
+      "retrieval_timings": {},
+      "retrieval_total_ms": 0.0,
+      "llm_ms": 0.0,
+      "total_ms": 0.0715,
+      "answer": "**Fault diagnosis (telemetry)**  \n- SN\u2011X7\u20110099 repeatedly logged fault **ERR_INV_404** (DC over\u2011current trip) at 2026\u201109\u201117\u202f13:00 and 2026\u201109\u201118\u202f13:00 with 62\u202f\u00b0C, 980\u202fV, 4\u202f500\u202fA, 82.5\u202f% SOC, indicating a thyristor\u2011pack issue. [S1][S3]  \n- SN\u2011X7\u20110150 recorded a critical **ERR_FUSE_001** (DC string fuse blown) at 2026\u201109\u201118\u202f11:30 with 85\u202f\u00b0C, 980\u202fV, 8\u202f250\u202fA, 75.0\u202f% SOC, pointing to fuse failure. [S2]\n\n**Maintenance response (engineering docs)**  \n- Incremental Maintenance Bulletin (m6_incremental_test.txt) recommends inspecting inverter cooling airflow, electrical connections, and battery temperature during scheduled X\u20117000 service. [S4]  \n- Battery Maintenance Note (m6_test_doc.txt) stresses that high\u2011temperature operation increases thermal stress; technicians must check cooling airflow, temperature, inverter fault codes, and connections. [S5]  \n- The X\u20117000 manual (Unstructured Data/GV\u2011MAN\u2011X7000\u2011001) lists",
+      "provenance": {
+        "S1": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90200",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S2": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90196",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-18T11:30:00.000Z",
+          "chunk_index": null
+        },
+        "S3": {
+          "source_type": "mongodb",
+          "source_id": "TLM-90190",
+          "source_name": "telemetry",
+          "timestamp": "2026-09-17T13:00:00.000Z",
+          "chunk_index": null
+        },
+        "S4": {
+          "source_type": "vector",
+          "source_id": "135b7ebc02df135133dfccc9bb8662632358e3f0",
+          "source_name": "m6_incremental_test.txt",
+          "timestamp": "2026-11-12T21:15:24.723618+00:00",
+          "chunk_index": 0
+        },
+        "S5": {
+          "source_type": "vector",
+          "source_id": "9e8632e47453e2ca08d905b49086668646d1c3ea",
+          "source_name": "m6_test_doc.txt",
+          "timestamp": "2026-11-12T21:26:28.745174+00:00",
+          "chunk_index": 0
+        },
+        "S6": {
+          "source_type": "vector",
+          "source_id": "d2b0fb91a7dd686e21751492bf546296f24509af",
+          "source_name": "Unstructured Data/GV-MAN-X7000-001 Manual.pdf",
+          "timestamp": "2026-10-22T16:18:32.292935+00:00",
+          "chunk_index": 0
+        },
+        "S7": {
+          "source_type": "vector",
+          "source_id": "eef2bb7a3dd418d7ee2d35f835653f274c06c0fc",
+          "source_name": "Unstructured Data/GV-INC-2024-119 Field Incident Low Isolation Trip.pdf",
+          "timestamp": "2026-10-22T16:18:31.356208+00:00",
+          "chunk_index": 0
+        }
+      },
+      "citation_validation": {
+        "valid_citations": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5"
+        ],
+        "invalid_citations": [],
+        "citation_validation_passed": true
+      },
+      "provenance_pass": true
+    }
+  ]
+}

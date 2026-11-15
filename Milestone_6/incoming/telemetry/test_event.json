@@ -1,0 +1,8 @@
+{
+  "log_id": "M6-TEST-001",
+  "equipment_id": "SN-X7-0150",
+  "timestamp": "2026-11-12T20:00:00Z",
+  "status": "TEST",
+  "fault_code": "M6_TEST"
+}
+

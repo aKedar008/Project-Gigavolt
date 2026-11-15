@@ -1,0 +1,45 @@
+{
+  "started_at_utc": "2026-11-12T21:26:27.790739+00:00",
+  "finished_at_utc": "2026-11-12T21:26:29.214888+00:00",
+  "files_seen": 4,
+  "failures": 0,
+  "results": [
+    {
+      "type": "telemetry",
+      "file": "incoming/telemetry/test_event.json",
+      "status": "SKIPPED",
+      "result": {
+        "status": "SKIPPED",
+        "loaded": 0
+      }
+    },
+    {
+      "type": "sql",
+      "file": "incoming/sql/equipment_update.csv",
+      "status": "SKIPPED",
+      "result": {
+        "status": "SKIPPED",
+        "loaded": 0
+      }
+    },
+    {
+      "type": "document",
+      "file": "incoming/documents/m6_incremental_test.txt",
+      "status": "SKIPPED",
+      "result": {
+        "status": "SKIPPED",
+        "chunks": 0
+      }
+    },
+    {
+      "type": "document",
+      "file": "incoming/documents/m6_test_doc.txt",
+      "status": "SUCCESS",
+      "result": {
+        "status": "SUCCESS",
+        "chunks": 1,
+        "collection_count": 31
+      }
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+Gigavolt X-7000 Battery Maintenance Note
+
+High-temperature operation can increase thermal stress on X-7000 battery systems.
+Technicians should inspect cooling airflow, battery temperature, inverter fault codes,
+and electrical connections during maintenance.
